@@ -7,6 +7,8 @@ book:
   date: last-modified
   chapters:
     - index.qmd
+    - 01_sites.qmd
+    - 10_methods.qmd
     - 13_climate.qmd
     - 14_soil.qmd
     - 15_landscape.qmd

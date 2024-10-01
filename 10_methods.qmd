@@ -1,0 +1,13 @@
+```{r setup}
+#| message: false
+#| include: false
+library(tidyverse)
+```
+
+# Methods {.unnumbered}
+
+We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [TerraClimate](https://www.climatologylab.org/terraclimate.html). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
+
+We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [SoilGrids](https://soilgrids.org/). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
+
+We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [TMF](https://forobs.jrc.ec.europa.eu/TMF). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .

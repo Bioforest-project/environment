@@ -1,4 +1,4 @@
-name: logging-diversity
+name: bioforest-env
 channels:
   - conda-forge
 dependencies:

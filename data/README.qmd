@@ -1,5 +1,5 @@
 ---
-title: "Data"
+title: "Results of the snakemake workflow"
 author: Sylvain Schmitt -
 date: today
 date-format: medium
@@ -9,19 +9,7 @@ format:
     toc-depth: 2
 ---
 
-The workflow to get the data and the data needed for the analyses.
-
-Workflow:
-
--   Snakefile: main snakemake workflow file
--   config/: all configuration files
--   scripts/: all scripts files
-
-Data:
-
--   climate: climate data
--   landscape: landscape data
--   soil: soil data
+This folder will contains the results of the snakemake workflow used by analyses in the quarto document.
 
 ```{r, comment=""}
 fs::dir_tree()

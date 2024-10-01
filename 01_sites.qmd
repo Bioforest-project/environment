@@ -1,0 +1,52 @@
+```{r setup}
+#| message: false
+#| include: false
+library(tidyverse)
+library(sf)
+library(leaflet)
+```
+
+# Sites {.unnumbered}
+
+All sites and plots coordinates preparation and visualization.
+
+First we had to prepare WGS84 - World Geodetic System 1984 coordinates from WGS 84 UTM zone 21N for Iwokrama.
+
+```{r projs}
+#| eval: false
+sites %>% 
+  mutate(plot = as.character(plot)) %>% 
+  unnest(plot) %>% 
+  filter(site == "Iwokrama") %>% 
+  select(plot, 
+         `Location (WGS UTM 21N) SW corners...5`, 
+         `Location (WGS UTM 21N) SW corners...6`) %>% 
+  rename(lat = `Location (WGS UTM 21N) SW corners...5`, 
+         lon = `Location (WGS UTM 21N) SW corners...6`) %>% 
+  sf::st_as_sf(coords = c("lat", "lon"), crs = "EPSG:32621") %>% 
+  sf::st_transform(4326) %>% 
+  sf::st_coordinates() %>% 
+  as_data_frame() %>% 
+  write_tsv("test.tsv")
+```
+
+```{r sites}
+#| eval: false
+sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% 
+  mutate(plot = as.character(plot)) %>% 
+  unnest(plot) %>% 
+  select(site, plot, latitude, longitude) %>%
+  na.omit() %>% 
+  write_tsv("outputs/sites.tsv")
+```
+
+```{r sitesmap}
+#| message: false
+#| warning: false
+#| fig-cap: "Sites and plots locations."
+read_tsv("outputs/sites.tsv") %>% 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(label = ~ paste(site, plot), labelOptions = labelOptions(noHide = F))
+```
