@@ -35,11 +35,39 @@
     "text": "Core group\n\nSylvain Schmitt (sylvain.schmitt@cirad.fr)\nCamille Piponiot-Laroche (camille.piponiot-laroche@cirad.fr)\nGéraldine Derroire (geraldine.derroire@cirad.fr)\nMithila Unkule (mithila.unkule@fondationbiodiversite.fr)\nIrié Cazimir Zo-Bi (iczobi@gmail.com)\nAnand Roopsind (aroopsind@gmail.com)\n\nThe whole group consist of participants to the Bioforest project."
   },
   {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "LoggingDiversity",
+    "section": "Installation",
+    "text": "Installation\nThis workflow is built on:\n\nPython ≥3.5\nMambaforge\nSnakemake ≥5.24.1\n\nconda activate base\nmamba create -c conda-forge -c bioconda -n snakemake snakemake\nconda activate snakemake\nsnakemake --help\nOnce installed simply clone the workflow:\ngit clone git@github.com:Bioforest-project/environment.git\ncd DownClim\nsnakemake -np"
+  },
+  {
+    "objectID": "index.html#conda",
+    "href": "index.html#conda",
+    "title": "LoggingDiversity",
+    "section": "Conda",
+    "text": "Conda\nmamba env create -f envs/bioforest-env.yml # init\nmamba env update -f envs/bioforest-env.yml --prune # update\nmamab activate bioforest-env"
+  },
+  {
+    "objectID": "index.html#snakemake",
+    "href": "index.html#snakemake",
+    "title": "LoggingDiversity",
+    "section": "Snakemake",
+    "text": "Snakemake\nsnakemake -np # dry run\nsnakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag\nsnakemake -j 1 --resources mem_mb=10000 # local run (test)"
+  },
+  {
+    "objectID": "index.html#data",
+    "href": "index.html#data",
+    "title": "LoggingDiversity",
+    "section": "Data",
+    "text": "Data\n\nTerraClimate\nSoilGrids\nTMF"
+  },
+  {
     "objectID": "01_sites.html",
     "href": "01_sites.html",
     "title": "Sites",
     "section": "",
-    "text": "All sites and plots coordinates preparation and visualization.\nFirst we had to prepare WGS84 - World Geodetic System 1984 coordinates from WGS 84 UTM zone 21N for Iwokrama.\n\n\nCode\nsites %&gt;% \n  mutate(plot = as.character(plot)) %&gt;% \n  unnest(plot) %&gt;% \n  filter(site == \"Iwokrama\") %&gt;% \n  select(plot, \n         `Location (WGS UTM 21N) SW corners...5`, \n         `Location (WGS UTM 21N) SW corners...6`) %&gt;% \n  rename(lat = `Location (WGS UTM 21N) SW corners...5`, \n         lon = `Location (WGS UTM 21N) SW corners...6`) %&gt;% \n  sf::st_as_sf(coords = c(\"lat\", \"lon\"), crs = \"EPSG:32621\") %&gt;% \n  sf::st_transform(4326) %&gt;% \n  sf::st_coordinates() %&gt;% \n  as_data_frame() %&gt;% \n  write_tsv(\"test.tsv\")\n\n\n\n\nCode\nsites &lt;- googlesheets4::read_sheet(\"https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0\") %&gt;% \n  mutate(plot = as.character(plot)) %&gt;% \n  unnest(plot) %&gt;% \n  select(site, plot, latitude, longitude) %&gt;%\n  na.omit() %&gt;% \n  write_tsv(\"outputs/sites.tsv\")\n\n\n\n\nCode\nread_tsv(\"outputs/sites.tsv\") %&gt;% \n  st_as_sf(coords = c(\"longitude\", \"latitude\"), crs = 4326) %&gt;% \n  leaflet() %&gt;% \n  addTiles() %&gt;% \n  addMarkers(label = ~ paste(site, plot), labelOptions = labelOptions(noHide = F))\n\n\n\n\nSites and plots locations."
+    "text": "All sites and plots coordinates preparation and visualization.\nFirst we had to prepare WGS84 - World Geodetic System 1984 coordinates from WGS 84 UTM zone 21N for Iwokrama.\n\n\nCode\nsites %&gt;% \n  mutate(plot = as.character(plot)) %&gt;% \n  unnest(plot) %&gt;% \n  filter(site == \"Iwokrama\") %&gt;% \n  select(plot, \n         `Location (WGS UTM 21N) SW corners...5`, \n         `Location (WGS UTM 21N) SW corners...6`) %&gt;% \n  rename(lat = `Location (WGS UTM 21N) SW corners...5`, \n         lon = `Location (WGS UTM 21N) SW corners...6`) %&gt;% \n  sf::st_as_sf(coords = c(\"lat\", \"lon\"), crs = \"EPSG:32621\") %&gt;% \n  sf::st_transform(4326) %&gt;% \n  sf::st_coordinates() %&gt;% \n  as_data_frame() %&gt;% \n  write_tsv(\"test.tsv\")\n\n\n\n\nCode\nsites &lt;- googlesheets4::read_sheet(\"https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0\") %&gt;% \n  mutate(plot = as.character(plot)) %&gt;% \n  unnest(plot) %&gt;% \n  select(site, plot, latitude, longitude) %&gt;%\n  na.omit() %&gt;% \n  write_tsv(\"outputs/sites.tsv\")\n\n\n\n\nCode\nread_tsv(\"outputs/sites.tsv\") %&gt;% \n  st_as_sf(coords = c(\"longitude\", \"latitude\"), crs = 4326) %&gt;% \n  leaflet() %&gt;% \n  addTiles() %&gt;% \n  addMarkers(label = ~ paste(site, plot), labelOptions = labelOptions(noHide = F))\n\n\n\n\nSites and plots locations.\n\n\n\n\nCode\nread_tsv(\"outputs/sites.tsv\") %&gt;% \n  st_as_sf(coords = c(\"longitude\", \"latitude\"), crs = 4326) %&gt;% \n  group_by(site) %&gt;% \n  summarise(n = n()) %&gt;% \n  st_convex_hull() %&gt;% \n  mutate(area = as.numeric(set_units(st_area(.), \"km^2\"))) %&gt;% \n  st_drop_geometry() %&gt;% \n  ggplot(aes(n, area)) +\n  geom_point() +\n  theme_bw() +\n  xlab(\"Number of plots\") + ylab(expression(paste(\"Area [\", km^2, \"]\"))) +\n  ggrepel::geom_text_repel(aes(label = site)) +\n  scale_y_sqrt()\n\n\n\n\n\nNumber of sites and total plots surface."
   },
   {
     "objectID": "10_methods.html",

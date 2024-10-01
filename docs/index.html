@@ -186,6 +186,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#contribution" id="toc-contribution" class="nav-link" data-scroll-target="#contribution">Contribution</a></li>
   <li><a href="#help" id="toc-help" class="nav-link" data-scroll-target="#help">Help</a></li>
   <li><a href="#core-group" id="toc-core-group" class="nav-link" data-scroll-target="#core-group">Core group</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
+  <li><a href="#conda" id="toc-conda" class="nav-link" data-scroll-target="#conda">Conda</a></li>
+  <li><a href="#snakemake" id="toc-snakemake" class="nav-link" data-scroll-target="#snakemake">Snakemake</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -246,6 +250,43 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>The whole group consist of participants to the <a href="https://www.fondationbiodiversite.fr/la-frb-en-action/programmes-et-projets/le-cesab/bioforest/">Bioforest project</a>.</p>
 <p><img src="https://www.fondationbiodiversite.fr/wp-content/uploads/2023/10/bioforest-ws1_web.jpeg" class="img-fluid"></p>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>This workflow is built on:</p>
+<ul>
+<li>Python ≥3.5</li>
+<li><a href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge</a></li>
+<li>Snakemake ≥5.24.1</li>
+</ul>
+<pre><code>conda activate base
+mamba create -c conda-forge -c bioconda -n snakemake snakemake
+conda activate snakemake
+snakemake --help</code></pre>
+<p>Once installed simply clone the workflow:</p>
+<pre><code>git clone git@github.com:Bioforest-project/environment.git
+cd DownClim
+snakemake -np </code></pre>
+</section>
+<section id="conda" class="level2">
+<h2 class="anchored" data-anchor-id="conda">Conda</h2>
+<pre><code>mamba env create -f envs/bioforest-env.yml # init
+mamba env update -f envs/bioforest-env.yml --prune # update
+mamab activate bioforest-env</code></pre>
+</section>
+<section id="snakemake" class="level2">
+<h2 class="anchored" data-anchor-id="snakemake">Snakemake</h2>
+<pre><code>snakemake -np # dry run
+snakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag
+snakemake -j 1 --resources mem_mb=10000 # local run (test)</code></pre>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<ul>
+<li>TerraClimate</li>
+<li>SoilGrids</li>
+<li>TMF</li>
+</ul>
 
 
 </section>

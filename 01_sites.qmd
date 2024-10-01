@@ -4,6 +4,7 @@
 library(tidyverse)
 library(sf)
 library(leaflet)
+library(units)
 ```
 
 # Sites {.unnumbered}
@@ -49,4 +50,23 @@ read_tsv("outputs/sites.tsv") %>%
   leaflet() %>% 
   addTiles() %>% 
   addMarkers(label = ~ paste(site, plot), labelOptions = labelOptions(noHide = F))
+```
+
+```{r sitesarea}
+#| message: false
+#| warning: false
+#| fig-cap: "Number of sites and total plots surface."
+read_tsv("outputs/sites.tsv") %>% 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% 
+  group_by(site) %>% 
+  summarise(n = n()) %>% 
+  st_convex_hull() %>% 
+  mutate(area = as.numeric(set_units(st_area(.), "km^2"))) %>% 
+  st_drop_geometry() %>% 
+  ggplot(aes(n, area)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Number of plots") + ylab(expression(paste("Area [", km^2, "]"))) +
+  ggrepel::geom_text_repel(aes(label = site)) +
+  scale_y_sqrt()
 ```
