@@ -2,45 +2,8 @@
 
 This appendix can be used to take notes from meetings.
 
-## 24/04/10 - Kick-off
+## 24/10/04 - Kick-off
 
-*Natalia, David, Geno, Mithila, Sylvain*
+*Camille, Géraldine, Anand, Irié, Mithila, Sylvain*
 
--   We need to standardise biodiversity variation across sites for comparisons because base diversity will vary biogeographically. Same for logging intensity.
--   We can compare post-logging biodiversity state / trajectory to either prelogging inventories or control plots. In preliminary analyses we wish to do all.
--   **! We need to take care not to overstep with the second group about recovery rates !**
--   For that we will focus on biodiversity more in depth including richness, evenness, composition, functional diversity, even phylogenetic diversity?
--   We need to find what we will add to the current literature, so we have a need of review
--   Next tasks are:
-    -   More literature review, knowing that Mithila is working on a general review (we will use a folder on the drive to share articles and the literature chapter of this book to list relevant references and maybe summarise a bit of ideas)
-    -   Developing the ideas
-    -   Developing the data (Sylvain's suggestion)
-    -   Learn Git / GitHub / ...
--   Newt meeting should be held after the GitHub course. We aim at bimonthly meeting knowing that some month might be more complicated due to holidays.
-
-## 24/06/04 - Conceptual framework
-
-*David, Geno, Mithila, Sylvain*
-
--   David: *Disturbing hypotheses in tropical forests* by Sheil and Burlsem 2003 = \> Intermediate Disturbance Hypotheses (IDH) Fig 1. varying with time, frequency, and size/intesnity + multiple scales and structure but a signle underlying hpothesis
--   David: Molino & Sabatier 2021 =\> some evidences
--   Mithila: available data for exploration from Lucas, Geno, Géraldine and Irié
--   Geno: Add phylogenetic diveristy and is there a limit of IDH for very rich forest, at least for richness?
--   David: ++ phylogenetic diversity
--   Mithila: meetings every two weeks Tuesday 2 pm CET
--   David: with a precise objective and even if only two of us
-
-## 24/07/16- Conceptual framework
-
-*David, Geno, Verginia, Sylvain*
-
--   recap of the meeting of July 2nd where Mithila shared some figures and how some data do not make sense-more information is needed from the Site PIs, some of the harmonized data are still not in the desired format; maybe an extra step is needed between harmonized and the aggregated data
--   David started to write the framework with support from Geno--\> see ideas
--   discussion on what meta data is needed to continue the analysis; To Do: List what meta data is needed and communicate this to the site PIs or other
--   Verginia shared two documents via email from past TmFO meetings; one concerns meta data from sites and the other is a word doc of data analysis for a biodiversity study, the research questions in the protocol can support this analysis
--   start listing the different diversity measures/parameters to take into account for the analysis
--   Research questions can be further expanded to more specific research questions; also include main objectives of the study
--   Sylvan shared paper by Mirabel et al 2020, on what graphs we expect from the analysis, see email with attached paper
--   Geno will or already shared additional data of the data set with Mithila, concerns logging information
--   How to define logging damage, what parameters will be used
--   what will be used relative measure of diversity or absolute measure of diversity?
+-   

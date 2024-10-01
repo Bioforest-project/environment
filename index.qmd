@@ -1,28 +1,29 @@
 # Introduction {.unnumbered}
 
-**LoggingDiversity** is a sub-project of the **BioForest** project aimed at studying the Interactions between tree biodiversity, forest dynamics and climate in managed tropical forests with a pan-tropical approach. Specifically, **LoggingDiversity** focus on the **effects of logging disturbance on tropical forest diversity - a global assessment** with the following question: What is the effect of logging intensity on biodiversity, and how does it change through time?
+**environment** is a sub-project of the **BioForest** project aimed at gathering environmental variables (to list) for data preparation within the project.
 
 ## Project
 
-**LoggingDiversity** includes all codes to access the data (in `data/`) & analyse the data (`files.qmd`) with associated [documentation and figures](https://bioforest-project.github.io/LoggingDiversity/). Intermediary files and outputs can be accessed in `outputs/`. The project takes advantage of `renv` to manage the R environment for enhanced reproducibility.
+**environment** includes all codes to access the data (in `data/`) & analyse the data (`files.qmd`) with associated [documentation and figures](https://bioforest-project.github.io/LoggingDiversity/). Intermediary files and outputs can be accessed in `outputs/`. The project takes advantage of `renv` to manage the R environment for enhanced reproducibility.
+
+> This will evolve to better integrate snakemake with conda
 
 ## Contribution
 
-You can contribute to the project by forking the repository on github and cloning the fork to your machine using several options, including GitHub desktop GUI. Access to the data is limited and can be requested by emailing people from the core group (see below). Further informations on contribution are detailed in the online document: <https://bioforest-project.github.io/LoggingDiversity/98_contributing.html>.
+You can contribute to the project by forking the repository on github and cloning the fork to your machine using several options, including GitHub desktop GUI. Access to the data is limited and can be requested by emailing people from the core group (see below). Further informations on contribution are detailed in the online document: <https://bioforest-project.github.io/environment/98_contributing.html>.
 
 ## Help
 
-Please preferentially create an issue on GitHub for any questions, bugs or help needed regarding **LoggingDiversity**: <https://github.com/Bioforest-project/LoggingDiversity/issues> . You may however reach us by mail with people from the core group (see below).
+Please preferentially create an issue on GitHub for any questions, bugs or help needed regarding **environment**: <https://github.com/Bioforest-project/environment/issues> . You may however reach us by mail with people from the core group (see below).
 
 ## Core group
 
 -   Sylvain Schmitt (sylvain.schmitt\@cirad.fr)
+-   Camille Piponiot-Laroche (camille.piponiot-laroche\@cirad.fr)
+-   Géraldine Derroire (geraldine.derroire\@cirad.fr)
 -   Mithila Unkule (mithila.unkule\@fondationbiodiversite.fr)
--   Genoveva Gatti (genogatti\@gmail.com)
--   David Burslem (d.burslem\@abdn.ac.uk)
--   Andes Hamuraby Rozak (andes.hamuraby.rozak\@brin.go.id)
--   Natalia Bedrij (nabedrij\@gmail.com)
--   Verginia Wortel (wortelv\@gmail.com)
+-   Irié Cazimir Zo-Bi (iczobi\@gmail.com)
+-   Anand Roopsind (aroopsind\@gmail.com)
 
 The whole group consist of participants to the [Bioforest project](https://www.fondationbiodiversite.fr/la-frb-en-action/programmes-et-projets/le-cesab/bioforest/).
 
