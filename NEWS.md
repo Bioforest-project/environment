@@ -1,3 +1,4 @@
+-   troll_eval 0.1.0.9004: TerraClimate all sites
 -   troll_eval 0.1.0.9003: Aldrich's sites fix
 -   troll_eval 0.1.0.9002: sites map
 -   troll_eval 0.1.0.9001: cleaned fork from LoggingDiversity

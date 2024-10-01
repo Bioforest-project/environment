@@ -2,30 +2,31 @@ configfile: "config/config.yml"
 
 import pandas as pd
 sites = pd.read_table(config["sites"])
+sites['site_plot'] = sites['site'] + "_" + sites['plot']
 
 rule all:
    input:
-      expand("climate/{site}_climate.tsv",
-              site=sites.site),
-      expand("soil/{site}_soil.tsv",
-              site=sites.site),
-      expand("landscape/{site}_landscape.tsv",
-              site=sites.site)
+      expand("data/climate/{site}_climate.tsv",
+              site=sites.site_plot)
+    #   expand("soil/{site}_soil.tsv",
+    #           site=sites.site_plot),
+    #   expand("landscape/{site}_landscape.tsv",
+    #           site=sites.site_plot)
 
 rule get_climate:
     input:
         config["sites"]
     output:
-        "climate/{site}_climate.tsv"
+        "data/climate/{site}_climate.tsv"
     log:
-        "logs/{site}_climate.log"
+        "data/logs/{site}_climate.log"
     benchmark:
-        "benchmarks/{site}_climate.benchmark.txt"
+        "data/benchmarks/{site}_climate.benchmark.txt"
     threads: 1
     resources:
         mem_mb=1000
     conda:
-        "config/logging_diversity.yml"
+        "envs/bioforest-env.yml"
     params:
         site="{site}"
     script:
@@ -35,16 +36,16 @@ rule get_soil:
     input:
         config["sites"]
     output:
-        "soil/{site}_soil.tsv"
+        "data/soil/{site}_soil.tsv"
     log:
-        "logs/{site}_soil.log"
+        "data/logs/{site}_soil.log"
     benchmark:
-        "benchmarks/{site}_soil.benchmark.txt"
+        "data/benchmarks/{site}_soil.benchmark.txt"
     threads: 1
     resources:
         mem_mb=1000
     conda:
-        "config/logging_diversity.yml"
+        "envs/bioforest-env.yml"
     params:
         site="{site}"
     script:
@@ -54,16 +55,16 @@ rule get_landscape:
     input:
         config["sites"]
     output:
-        "landscape/{site}_landscape.tsv"
+        "data/landscape/{site}_landscape.tsv"
     log:
-        "logs/{site}_landscape.log"
+        "data/logs/{site}_landscape.log"
     benchmark:
-        "benchmarks/{site}_landscape.benchmark.txt"
+        "data/benchmarks/{site}_landscape.benchmark.txt"
     threads: 1
     resources:
         mem_mb=1000
     conda:
-        "config/logging_diversity.yml"
+        "envs/bioforest-env.yml"
     params:
         site="{site}",
         radius=config["landscape_radius"]

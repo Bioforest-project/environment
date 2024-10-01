@@ -2,63 +2,63 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "",
     "text": "Introduction\nenvironment is a sub-project of the BioForest project aimed at gathering environmental variables (to list) for data preparation within the project."
   },
   {
     "objectID": "index.html#project",
     "href": "index.html#project",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Project",
     "text": "Project\nenvironment includes all codes to access the data (in data/) & analyse the data (files.qmd) with associated documentation and figures. Intermediary files and outputs can be accessed in outputs/. The project takes advantage of renv to manage the R environment for enhanced reproducibility.\n\nThis will evolve to better integrate snakemake with conda"
   },
   {
     "objectID": "index.html#contribution",
     "href": "index.html#contribution",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Contribution",
     "text": "Contribution\nYou can contribute to the project by forking the repository on github and cloning the fork to your machine using several options, including GitHub desktop GUI. Access to the data is limited and can be requested by emailing people from the core group (see below). Further informations on contribution are detailed in the online document: https://bioforest-project.github.io/environment/98_contributing.html."
   },
   {
     "objectID": "index.html#help",
     "href": "index.html#help",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Help",
     "text": "Help\nPlease preferentially create an issue on GitHub for any questions, bugs or help needed regarding environment: https://github.com/Bioforest-project/environment/issues . You may however reach us by mail with people from the core group (see below)."
   },
   {
     "objectID": "index.html#core-group",
     "href": "index.html#core-group",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Core group",
     "text": "Core group\n\nSylvain Schmitt (sylvain.schmitt@cirad.fr)\nCamille Piponiot-Laroche (camille.piponiot-laroche@cirad.fr)\nGéraldine Derroire (geraldine.derroire@cirad.fr)\nMithila Unkule (mithila.unkule@fondationbiodiversite.fr)\nIrié Cazimir Zo-Bi (iczobi@gmail.com)\nAnand Roopsind (aroopsind@gmail.com)\n\nThe whole group consist of participants to the Bioforest project."
   },
   {
     "objectID": "index.html#installation",
     "href": "index.html#installation",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Installation",
     "text": "Installation\nThis workflow is built on:\n\nPython ≥3.5\nMambaforge\nSnakemake ≥5.24.1\n\nconda activate base\nmamba create -c conda-forge -c bioconda -n snakemake snakemake\nconda activate snakemake\nsnakemake --help\nOnce installed simply clone the workflow:\ngit clone git@github.com:Bioforest-project/environment.git\ncd DownClim\nsnakemake -np"
   },
   {
     "objectID": "index.html#conda",
     "href": "index.html#conda",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Conda",
     "text": "Conda\nmamba env create -f envs/bioforest-env.yml # init\nmamba env update -f envs/bioforest-env.yml --prune # update\nmamab activate bioforest-env"
   },
   {
     "objectID": "index.html#snakemake",
     "href": "index.html#snakemake",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Snakemake",
     "text": "Snakemake\nsnakemake -np # dry run\nsnakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag\nsnakemake -j 1 --resources mem_mb=10000 # local run (test)"
   },
   {
     "objectID": "index.html#data",
     "href": "index.html#data",
-    "title": "LoggingDiversity",
+    "title": "environment",
     "section": "Data",
     "text": "Data\n\nTerraClimate\nSoilGrids\nTMF"
   },
@@ -81,7 +81,7 @@
     "href": "13_climate.html",
     "title": "Climate",
     "section": "",
-    "text": "Figures below show the resulting variables per month for Paracou and Missiones and a detailed figure for Paracou. This could be compared to site data later on for validation.\n\n\nCode\nlist.files(\"data/climate/\", full.names = TRUE) %&gt;% \n  read_tsv() %&gt;% \n  group_by(site) %&gt;% \n  mutate(month = 1:12) %&gt;% \n  mutate(aet = aet*.1, def = def*.1, pdsi = pdsi*.01, pet = pet*.1,\n         tmmn = tmmn*.1, tmmx = tmmx*.1, vpd = vpd*.01) %&gt;% \n  write_tsv(\"outputs/climate.tsv\") \n\n\n\n\nCode\nread_tsv(\"outputs/climate.tsv\") %&gt;% \n  gather(variable, value, -site, -month) %&gt;% \n  mutate(var_long = recode(variable,\n                           \"aet\" = \"Actual evapotranspiration\",\n                           \"def\" = \"Climate water deficit\",\n                           \"pdsi\" = \"Palmer Drought Severity Index\",\n                           \"pet\" = \"Potential evapotranspiration\",\n                           \"pr\" = \"Precipitation\",\n                           \"tmmn\" = \"Minimum temperature\",\n                           \"tmmx\" = \"Maximum temperature\",\n                           \"vpd\" = \"Vapor pressure deficit\")) %&gt;% \n  ggplot(aes(month, value, col = site)) +\n  geom_line() +\n  facet_wrap(~ var_long, scales = \"free_y\") +\n  xlab(\"\") + ylab(\"\") +\n  scale_x_continuous(breaks = 1:12,\n                     labels = c(\"J\", \"F\", \"M\", \"A\", \"M\", \"J\", \"J\", \"A\", \"S\", \"O\", \"N\", \"D\")) +\n  theme_bw() +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\nParacou and Missiones climate.\n\n\n\n\n\n\nCode\nread_tsv(\"outputs/climate.tsv\") %&gt;% \n  ggplot(aes(x = month)) +\n  geom_col(aes(y = pr/20), fill = \"grey\", col = NA) +\n  geom_line(aes(y = tmmn, col = \"maximum\")) +\n  geom_line(aes(y = tmmx, col = \"minimum\")) +\n  theme_bw() +\n  xlab(\"\") + \n  scale_x_continuous(breaks = 1:12,\n                     labels = c(\"J\", \"F\", \"M\", \"A\", \"M\", \"J\", \"J\", \"A\", \"S\", \"O\", \"N\", \"D\")) +\n  scale_y_continuous(\n    name = \"Temperature (°C)\",\n    sec.axis = sec_axis(trans = ~.*20, name = \"Precipitation (mm)\")\n  ) +\n  theme(\n    axis.title.y = element_text(color = \"black\"),\n    axis.title.y.right = element_text(color = \"grey\")\n  ) +\n  scale_color_discrete(\"\") +\n  theme(legend.position = \"bottom\") +\n  facet_wrap(~ site)\n\n\n\n\n\nParacou climate."
+    "text": "Figures below show the resulting variables per month. This could be compared to site data later on for validation.\n\n\nCode\nlist.files(\"data/climate/\", full.names = TRUE) %&gt;% \n  read_tsv() %&gt;% \n  group_by(site) %&gt;% \n  mutate(aet = aet*.1, def = def*.1, pdsi = pdsi*.01, pet = pet*.1,\n         tmmn = tmmn*.1, tmmx = tmmx*.1, vpd = vpd*.01) %&gt;% \n  write_tsv(\"outputs/climate.tsv\") \n\n\n\n\nCode\nread_tsv(\"outputs/climate.tsv\") %&gt;% \n  gather(variable, value, -site, -month, -plot, -lat, -lon) %&gt;% \n  mutate(var_long = recode(variable,\n                           \"aet\" = \"Actual evapotranspiration\",\n                           \"def\" = \"Climate water deficit\",\n                           \"pdsi\" = \"Palmer Drought Severity Index\",\n                           \"pet\" = \"Potential evapotranspiration\",\n                           \"pr\" = \"Precipitation\",\n                           \"tmmn\" = \"Minimum temperature\",\n                           \"tmmx\" = \"Maximum temperature\",\n                           \"vpd\" = \"Vapor pressure deficit\")) %&gt;% \n  ggplot(aes(month, value, col = site, group = paste(site, plot))) +\n  geom_line() +\n  facet_wrap(~ var_long, scales = \"free_y\") +\n  xlab(\"\") + ylab(\"\") +\n  scale_x_continuous(breaks = 1:12,\n                     labels = c(\"J\", \"F\", \"M\", \"A\", \"M\", \"J\", \"J\", \"A\", \"S\", \"O\", \"N\", \"D\")) +\n  theme_bw() +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\nClimate.\n\n\n\n\n\n\nCode\nread_tsv(\"outputs/climate.tsv\") %&gt;% \n  select(-lon, -lat) %&gt;% \n  group_by(site, month) %&gt;% \n  summarise_all(mean) %&gt;% \n  ggplot(aes(x = month)) +\n  geom_col(aes(y = pr/30), fill = \"grey\", col = NA) +\n  geom_line(aes(y = tmmn, col = \"maximum\")) +\n  geom_line(aes(y = tmmx, col = \"minimum\")) +\n  theme_bw() +\n  xlab(\"\") + \n  scale_x_continuous(breaks = 1:12,\n                     labels = c(\"J\", \"F\", \"M\", \"A\", \"M\", \"J\", \"J\", \"A\", \"S\", \"O\", \"N\", \"D\")) +\n  scale_y_continuous(\n    name = \"Temperature (°C)\",\n    sec.axis = sec_axis(trans = ~.*30, name = \"Precipitation (mm)\")\n  ) +\n  theme(\n    axis.title.y = element_text(color = \"black\"),\n    axis.title.y.right = element_text(color = \"grey\")\n  ) +\n  scale_color_discrete(\"\") +\n  theme(legend.position = \"bottom\") +\n  facet_wrap(~ site)\n\n\n\n\n\nClimate."
   },
   {
     "objectID": "14_soil.html",

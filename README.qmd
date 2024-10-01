@@ -43,9 +43,9 @@ The whole group consist of participants to the [Bioforest project](https://www.f
 
 This workflow is built on:
 
--    Python ≥3.5
--    [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge)
--    Snakemake ≥5.24.1
+-   Python ≥3.5
+-   [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge)
+-   Snakemake ≥5.24.1
 
 ```         
 conda activate base
