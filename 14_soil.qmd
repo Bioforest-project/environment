@@ -6,13 +6,28 @@ library(tidyverse)
 
 # Soil {.unnumbered}
 
-Figures below show the resulting variables per depth for Paracou and Missiones and a detailed figureof textures. This could be compared to site data later on for validation, knowing SoilGrids have know issue for instance in French Guiana.
+We retrieved all data from SoilGrids detailed below [@poggio2021], but the spatial extrapolation and reference points have some issues as for instance in French Guiana. This could be compared to site data, but with issues regarding site data standardization, representativeness, and validation.
 
-```{r prepclim}
+-   Clay: Proportion of clay particles (\< 0.002 mm) in the fine earth fraction, %
+-   Sand: Proportion of sand particles (\> 0.05 mm) in the fine earth fraction, %
+-   Silt: Proportion of silt particles (≥ 0.002 mm and ≤ 0.05 mm) in the fine earth fraction, %
+-   BD: Bulk density of the fine earth fraction, kg dm³
+-   CEC: Cation Exchange Capacity of the soil, cmolC kg^-1^
+-   CF: Volumetric fraction of coarse fragments (\> 2 mm), cm^3^ 100cm^-3^
+-   N: Total nitrogen, g kg^-1^
+-   pH: Soil pH
+-   SOC: Soil organic carbon content in the fine earth fraction, g kg^-1^
+-   OCD: Organic carbon density, kg dm³
+-   OCS: Organic carbon stocks, kg m^2^
+
+> The workflow worked well at the exception of `r (anti_join(read_tsv("outputs/sites.tsv") %>% select(plot, site) %>% unique(), read_tsv("outputs/soil.tsv") %>% select(plot, site) %>% unique()) %>% select(site) %>% unique())$site %>% paste(collapse = ", ")` . This is because Tene location is wrong and is not in land.
+
+```{r prep}
 #| eval: false
 list.files("data/soil/", full.names = TRUE) %>% 
   read_tsv() %>% 
-  gather(variable, value, -site) %>% 
+  select(-time) %>% 
+  gather(variable, value, -site, -plot, -lon, -lat) %>% 
   separate(variable, c("variable", "depth"), "_") %>% 
   separate(depth, c("mindepth", "depth"), "-") %>% 
   mutate(depth = as.numeric(gsub("cm", "", depth))) %>% 
@@ -34,35 +49,108 @@ list.files("data/soil/", full.names = TRUE) %>%
   write_tsv("outputs/soil.tsv") 
 ```
 
+> BAFOG and Paracou are lacking because too close to the sea.
+
 ```{r allplot}
 #| message: false
 #| warning: false
-#| fig-cap: "Paracou and Missiones soil."
+#| fig-cap: "Mean soil data per site and depth."
 read_tsv("outputs/soil.tsv") %>% 
+  select(-lon, -lat, -plot) %>% 
+  group_by(site, depth) %>% 
+  summarise_all(mean, na.omit = TRUE) %>% 
   gather(variable, value, -site, -depth) %>% 
+  mutate(var_long = recode(variable,
+                           "bdod" = '"BD ["~kg~dm^{-3}~"]"',
+                           "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
+                           "cfvo" = '"CF ["~cm^3~"100"~cm^{-3}~"]"',
+                           "clay" = '"Clay ["~"%"~"]"',
+                           "nitrogen" = '"N ["~g~kg^{-1}~"]"',
+                           "ocd" = '"OCD ["~kg~dm^{3}~"]"',
+                           "ocs"  = '"OCS ["~kg~m^{-2}~"]"',
+                           "phh2o" = "pH",
+                           "sand" = '"Sand ["~"%"~"]"',
+                           "silt" = '"Silt ["~"%"~"]"',
+                           "soc" = '"SOC ["~g~kg^{-1}~"]"')
+         ) %>% 
   ggplot(aes(site, value, fill = depth)) +
   geom_col(aes(group = as.factor(depth)), position = "dodge") +
-  facet_wrap(~ variable, scales = "free_y") +
+  facet_wrap(~ var_long, scales = "free_x", labeller = label_parsed) +
   theme_bw() +
-  theme(legend.position = "bottom", axis.title = element_blank()) +
-  scale_fill_viridis_c()
+  theme(axis.title = element_blank(),
+        axis.text.y = element_text(size = 5)) +
+  scale_fill_viridis_c() +
+  coord_flip()
+```
+
+```{r allplot5}
+#| message: false
+#| warning: false
+#| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
+read_tsv("outputs/soil.tsv") %>% 
+  select(-lon, -lat, -plot) %>% 
+  group_by(site, depth) %>% 
+  summarise_all(mean, na.omit = TRUE) %>% 
+  filter(depth == 5) %>% 
+  gather(variable, value, -site, -depth) %>% 
+  na.omit() %>% 
+  mutate(var_long = recode(variable,
+                           "bdod" = '"BD ["~kg~dm^{-3}~"]"',
+                           "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
+                           "cfvo" = '"CF ["~cm^3~"100"~cm^{-3}~"]"',
+                           "clay" = '"Clay ["~"%"~"]"',
+                           "nitrogen" = '"N ["~g~kg^{-1}~"]"',
+                           "ocd" = '"OCD ["~kg~dm^{3}~"]"',
+                           "ocs"  = '"OCS ["~kg~m^{-2}~"]"',
+                           "phh2o" = "pH",
+                           "sand" = '"Sand ["~"%"~"]"',
+                           "silt" = '"Silt ["~"%"~"]"',
+                           "soc" = '"SOC ["~g~kg^{-1}~"]"')
+         ) %>% 
+  ggplot(aes(site, value, fill = site)) +
+  geom_col(aes(group = as.factor(depth)), position = "dodge") +
+  facet_wrap(~ var_long, scales = "free_y", labeller = label_parsed) +
+  theme_bw() +
+  theme(legend.position = "bottom", axis.title = element_blank(),
+        axis.text.x = element_blank()) +
+  scale_fill_discrete("")
 ```
 
 ```{r betterplot}
 #| message: false
 #| warning: false
-#| fig-cap: "Paracou and Missiones soil texture."
+#| fig-cap: "Soil texture for all sites, plots and depths."
 read_tsv("outputs/soil.tsv") %>% 
   ggplot(aes(x = sand, y = clay, z = silt, col = site)) +
   ggtern::coord_tern(L = "x", T = "y", R = "z") +
   geom_point() +
   theme_bw() +
   labs(
-    yarrow = "Clay (%)",
-    zarrow = "Silt (%)",
-    xarrow = "Sand (%)"
+    yarrow = "Clay [ % ]",
+    zarrow = "Silt [ % ]",
+    xarrow = "Sand [ % ]"
   ) +
   ggtern::theme_showarrows() +
   ggtern::theme_hidetitles()+
-  ggtern::theme_clockwise()
+  ggtern::theme_clockwise() +
+  scale_color_discrete("") +
+  theme(legend.position = "bottom")
+```
+
+```{r pca}
+#| message: false
+#| warning: false
+#| fig-cap: "Soil variables PCA per site and plot."
+library(ggfortify)
+data <- read_tsv("outputs/soil.tsv") %>% 
+  filter(depth == 5) %>% 
+  select(-ocs) %>% 
+  na.omit()
+pca <- prcomp(data %>% select(-site, -plot, -lat, -lon, -depth), scale. = TRUE)
+autoplot(pca, loadings = TRUE, loadings.label = TRUE,
+         loadings.label.repel = TRUE,
+         data = data, colour = 'site') +
+  theme_bw() +
+  coord_equal() +
+  scale_color_discrete("")
 ```

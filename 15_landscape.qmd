@@ -6,38 +6,90 @@ library(tidyverse)
 
 # Landscape {.unnumbered}
 
-Figures below show the resulting forest cover around Paracou and orresponding forest cover images through time. Other landscape indices could be derived from TMF data.
+For the moment we only used information on total forest cover area in a radius of 1-km from TMF [@europeancommission.jointresearchcentre.2020]. But the radius could be changed and other finer landscape indices could be derived and finer classification from TMF data could be used. Additionally, in landscape metrics WS1 metadata file listed also distance to the nearest village or road which could be simply extracted from openstreetmaps using R ([osmdata](#%7C%20message:%20false%20#%7C%20warning:%20false%20#%7C%20fig-cap: "Tapajós km 67 20E forest cover through time.")).
+
+> The workflow worked well at the exception of `r (anti_join(read_tsv("outputs/sites.tsv") %>% select(plot, site) %>% unique(), read_tsv("outputs/landscape.tsv") %>% select(plot, site) %>% unique()) %>% select(site) %>% unique())$site %>% paste(collapse = ", ")` . This is because Tene location is wrong and is not in land.
 
 ```{r prep}
 #| eval: false
 list.files("data/landscape/", full.names = TRUE) %>% 
   read_tsv() %>% 
-  group_by(site, year, forest) %>% 
+  group_by(site, plot, year, forest) %>% 
   summarise(n = n()) %>% 
-  group_by(site, year) %>% 
+  group_by(site, plot, year) %>% 
   mutate(n_tot = sum(n)) %>% 
-  filter(forest == 1) %>% 
-  summarise(intact = n/n_tot*100) %>% 
+  pivot_wider(names_from = forest, values_from = n) %>% 
+  select(-`0`) %>% 
+  mutate(`1` = ifelse(is.na(`1`), 0, `1`)) %>% 
+  summarise(intact = `1`/n_tot*100) %>% 
   write_tsv("outputs/landscape.tsv") 
 ```
 
-```{r allplot}
+Most sites showed low deforestation level in the 90s but most of them showed deforestation increasing through time.
+
+> There are issues with locations of Lesong, Malinau, Missiones, Sungai Lalang, Ulu Muda, and Uppangala that doesn't fall on forest according to TMF.
+
+```{r allsites}
 #| message: false
 #| warning: false
-#| fig-cap: "Paracou forest cover through time."
+#| fig-cap: "Forest cover through time."
 read_tsv("outputs/landscape.tsv") %>% 
-  ggplot(aes(year, intact, col = site)) +
+  ggplot(aes(year, 100-intact, col = site, group = paste(site, plot))) +
   geom_line() +
   theme_bw() +
   xlab("") +
-  ylab("Percentage of forest in a radius of 1-km")
+  ylab("Deforested area in a radius of 1-km [ % ]") +
+  facet_wrap(~ site) +
+  scale_color_discrete(guide = "none") +
+  scale_y_sqrt()
 ```
+
+Most sites showed less than 10% forest loss cover in 2022, but few sites such as Tapajos km67 lost more than a third of their forest cover.
+
+```{r 2022cover}
+#| message: false
+#| warning: false
+#| fig-cap: "2022 forest cover."
+read_tsv("outputs/landscape.tsv") %>% 
+  filter(year == 2022) %>% 
+  ggplot(aes(site, 100-intact, fill = site, group = paste(site, plot))) +
+  geom_col(position = "dodge") +
+  theme_bw() +
+  xlab("") +
+  ylab("Deforested area in 2022 in a radius of 1-km [ % ]") +
+  scale_fill_discrete(" ") +
+  coord_flip() +
+  scale_y_sqrt()
+```
+
+Almost all sites lost forest cover between 1990 and 2022 at the exception of few plots in Sao Nicolau that gained almost 20% of cover.
+
+```{r coverchange}
+#| message: false
+#| warning: false
+#| fig-cap: "Forest cover change between 1990 and 2022."
+read_tsv("outputs/landscape.tsv") %>% 
+  filter(year %in% c(1990, 2022)) %>% 
+  arrange(site, plot, year) %>% 
+  group_by(site, plot) %>% 
+  mutate(delta = intact - lag(intact)) %>% 
+  na.omit() %>% 
+  ggplot(aes(site, delta, fill = site, group = paste(site, plot))) +
+  geom_col(position = "dodge") +
+  theme_bw() +
+  xlab("") +
+  ylab("Forest surface change between 1990 and 2022 in a radius of 1-km [ % ]") +
+  scale_fill_discrete(" ") +
+  coord_flip()
+```
+
+For each site we can use the intermediary files to project forest loss through time and derive finer landscape metrics if needed.
 
 ```{r betterplot}
 #| message: false
 #| warning: false
-#| fig-cap: "Paracou forest cover through time."
-read_tsv("data/landscape/paracou_landscape.tsv") %>% 
+#| fig-cap: "Tapajós km 67 20E forest cover through time."
+read_tsv("data/landscape/Tapajós km 67_20E_landscape.tsv") %>% 
   ggplot(aes(lon, lat, fill = as.factor(forest))) +
   geom_raster() +
   facet_wrap(~ year) +
@@ -48,5 +100,5 @@ read_tsv("data/landscape/paracou_landscape.tsv") %>%
         axis.title = element_blank(),
         axis.ticks = element_blank(),
         panel.spacing = unit(0,'lines')) +
-  ggtitle("Paracou forest landscape")
+  ggtitle("Tapajós km 67 20E forest landscape")
 ```

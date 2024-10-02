@@ -6,8 +6,6 @@ library(tidyverse)
 
 # Climate {.unnumbered}
 
-Figures below show the resulting variables per month. This could be compared to site data later on for validation.
-
 ```{r prepclim}
 #| eval: false
 list.files("data/climate/", full.names = TRUE) %>% 
@@ -16,31 +14,6 @@ list.files("data/climate/", full.names = TRUE) %>%
   mutate(aet = aet*.1, def = def*.1, pdsi = pdsi*.01, pet = pet*.1,
          tmmn = tmmn*.1, tmmx = tmmx*.1, vpd = vpd*.01) %>% 
   write_tsv("outputs/climate.tsv") 
-```
-
-```{r allplot}
-#| message: false
-#| warning: false
-#| fig-cap: "Climate."
-read_tsv("outputs/climate.tsv") %>% 
-  gather(variable, value, -site, -month, -plot, -lat, -lon) %>% 
-  mutate(var_long = recode(variable,
-                           "aet" = "Actual evapotranspiration",
-                           "def" = "Climate water deficit",
-                           "pdsi" = "Palmer Drought Severity Index",
-                           "pet" = "Potential evapotranspiration",
-                           "pr" = "Precipitation",
-                           "tmmn" = "Minimum temperature",
-                           "tmmx" = "Maximum temperature",
-                           "vpd" = "Vapor pressure deficit")) %>% 
-  ggplot(aes(month, value, col = site, group = paste(site, plot))) +
-  geom_line() +
-  facet_wrap(~ var_long, scales = "free_y") +
-  xlab("") + ylab("") +
-  scale_x_continuous(breaks = 1:12,
-                     labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")) +
-  theme_bw() +
-  theme(legend.position = "bottom")
 ```
 
 ```{r betterplot}
@@ -70,4 +43,78 @@ read_tsv("outputs/climate.tsv") %>%
   scale_color_discrete("") +
   theme(legend.position = "bottom") +
   facet_wrap(~ site)
+```
+
+```{r allplot}
+#| message: false
+#| warning: false
+#| fig-cap: "Climate."
+read_tsv("outputs/climate.tsv") %>% 
+  gather(variable, value, -site, -month, -plot, -lat, -lon) %>% 
+  mutate(var_long = recode(variable,
+                           "aet" = "Actual evapotranspiration [ mm ]",
+                           "def" = "Climate water deficit [ mm ]",
+                           "pdsi" = "Palmer Drought Severity Index",
+                           "pet" = "Potential evapotranspiration [ mm ]",
+                           "pr" = "Precipitation [ mm ]",
+                           "tmmn" = "Minimum temperature [ °C ]",
+                           "tmmx" = "Maximum temperature [ °C ]",
+                           "vpd" = "Vapor pressure deficit [ kPA ]")) %>% 
+  ggplot(aes(month, value, col = site, group = paste(site, plot))) +
+  geom_line() +
+  facet_wrap(~ var_long, scales = "free_y") +
+  xlab("") + ylab("") +
+  scale_x_continuous(breaks = 1:12,
+                     labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+```{r metrics}
+#| message: false
+#| warning: false
+#| fig-cap: "Climate."
+read_tsv("outputs/climate.tsv") %>% 
+  group_by(site, plot) %>% 
+  summarise(aet = sum(aet), def = sum(def), pdsi_max = max(pdsi), pdsi_min = min(pdsi), 
+            pdsi_mean = mean(pdsi), pet = sum(pet),
+            pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd_max = max(vpd)) %>% 
+  gather(variable, value, -site, -plot) %>% 
+    mutate(var_long = recode(variable,
+                           "aet" = "Evapotranspiration [ mm ]",
+                           "def" = "Climate water deficit [ mm ]",
+                           "pdsi_min" = "Min PDSI",
+                           "pdsi_max" = "Max PDSI",
+                           "pdsi_mean" = "Mean PDSI",
+                           "pet" = "Pot evapotranspiration [ mm ]",
+                           "pr" = "Precipitation [ mm ]",
+                           "tmin" = "Min temperature [ °C ]",
+                           "tmax" = "Max temperature [ °C ]",
+                           "vpd_max" = "Max VPD [ kPA ]")) %>% 
+  ggplot(aes(site, value, fill = site, group = paste(site, plot))) +
+  geom_col(position = "dodge") +
+  facet_wrap(~ var_long, scales = "free_x") +
+  theme_bw() +
+  coord_flip() +
+  theme(legend.position = "none", axis.title = element_blank(), axis.text.y = element_text(size = 7))
+```
+
+```{r pca}
+#| message: false
+#| warning: false
+#| fig-cap: "Climate variables PCA per site and plot."
+library(ggfortify)
+data <- read_tsv("outputs/climate.tsv") %>% 
+  group_by(site, plot) %>% 
+  summarise(aet = sum(aet), def = sum(def), pdsi_max = max(pdsi), pdsi_min = min(pdsi), 
+            pdsi_mean = mean(pdsi), pet = sum(pet),
+            pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd_max = max(vpd)) %>% 
+  ungroup()
+pca <- prcomp(data %>% select(-site, -plot), scale. = TRUE)
+autoplot(pca, loadings = TRUE, loadings.label = TRUE,
+         loadings.label.repel = TRUE,
+         data = data, colour = 'site') +
+  theme_bw() +
+  coord_equal() +
+  scale_color_discrete("")
 ```

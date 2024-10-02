@@ -9,10 +9,10 @@ radius = snakemake.params.radius
 out_file = snakemake.output[0]
 
 # test
-sites_tab = "config/sites.tsv"
-site = "missiones"
-radius = 0.009
-out_file = "landscape/missiones_landscape.tsv"
+# sites_tab = "config/sites.tsv"
+# site = "Uppangala_LP2"
+# radius = 0.009
+# out_file = "data/landscape/Uppangala_LP2_landscape.tsv"
 
 # libs
 import pandas as pd
@@ -21,9 +21,11 @@ import xarray as xr
 import numpy as np
 
 sites = pd.read_table(sites_tab)
-sites = sites[sites["site"]==site]
+sites['site_plot'] = sites['site'] + "_" + sites['plot']
+sites = sites[sites["site_plot"]==site]
 ee.Initialize(opt_url='https://earthengine-highvolume.googleapis.com')
-leg = ee.Geometry.Rectangle(sites.lon[1]-radius, sites.lat[1]-radius, sites.lon[1]+radius, sites.lat[1]+radius)
+leg = ee.Geometry.Rectangle(sites["longitude"].values[0]-radius, sites["latitude"].values[0]-radius, 
+                            sites["longitude"].values[0]+radius, sites["latitude"].values[0]+radius)
 
 ic = ee.ImageCollection("projects/JRC/TMF/v1_2022/AnnualChanges")
 ds = xr.open_mfdataset(
@@ -38,7 +40,8 @@ ds2 = ds.to_array("year", name="tmf").to_dataset().assign_coords(
 forest = ds2[["lon", "lat", "year"]]
 forest["forest"] = (ds2.tmf.isin([1,2,4])).astype(int)
 tab = forest.to_dataframe()
-tab.insert(0, "site", site)
+tab.insert(0, "site", sites["site"].values[0])
+tab.insert(0, "plot", sites["plot"].values[0])
 tab.to_csv(out_file, sep="\t", index=True)
 
 # plot

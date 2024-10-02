@@ -7,11 +7,11 @@ sites['site_plot'] = sites['site'] + "_" + sites['plot']
 rule all:
    input:
       expand("data/climate/{site}_climate.tsv",
+              site=sites.site_plot),
+      expand("data/soil/{site}_soil.tsv",
+              site=sites.site_plot),
+      expand("data/landscape/{site}_landscape.tsv",
               site=sites.site_plot)
-    #   expand("soil/{site}_soil.tsv",
-    #           site=sites.site_plot),
-    #   expand("landscape/{site}_landscape.tsv",
-    #           site=sites.site_plot)
 
 rule get_climate:
     input:
@@ -49,7 +49,7 @@ rule get_soil:
     params:
         site="{site}"
     script:
-      "scripts/get_climate.py"
+      "scripts/get_soil.py"
       
 rule get_landscape:
     input:
