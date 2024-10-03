@@ -37,7 +37,7 @@ sites %>%
 
 ```{r sites}
 #| eval: false
-sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>%
+sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% #nolint
   mutate(plot = as.character(plot)) %>%
   unnest(plot) %>%
   select(site, plot, latitude, longitude) %>%
