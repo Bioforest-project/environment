@@ -176,7 +176,16 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a></li>
+  <li><a href="#conda" id="toc-conda" class="nav-link" data-scroll-target="#conda">Conda</a></li>
+  <li><a href="#snakemake" id="toc-snakemake" class="nav-link" data-scroll-target="#snakemake">Snakemake</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -201,8 +210,45 @@ ul.task-list li input[type="checkbox"] {
 <p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases relying here on <a href="https://www.climatologylab.org/terraclimate.html">TerraClimate</a>. The code is available here: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/tree/main/data" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">/tree/main/data</a> .</p>
 <p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases relying here on <a href="https://soilgrids.org/">SoilGrids</a>. The code is available here: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/tree/main/data" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">/tree/main/data</a> .</p>
 <p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases relying here on <a href="https://forobs.jrc.ec.europa.eu/TMF">TMF</a>. The code is available here: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/tree/main/data" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">/tree/main/data</a> .</p>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>This workflow is built on:</p>
+<ul>
+<li>Python ≥3.5</li>
+<li><a href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge</a></li>
+<li>Snakemake ≥5.24.1</li>
+</ul>
+<pre><code>conda activate base
+mamba create -c conda-forge -c bioconda -n snakemake snakemake
+conda activate snakemake
+snakemake --help</code></pre>
+<p>Once installed simply clone the workflow:</p>
+<pre><code>git clone git@github.com:Bioforest-project/environment.git
+cd DownClim
+snakemake -np </code></pre>
+</section>
+<section id="conda" class="level2">
+<h2 class="anchored" data-anchor-id="conda">Conda</h2>
+<pre><code>mamba env create -f envs/bioforest-env.yml # init
+mamba env update -f envs/bioforest-env.yml --prune # update
+mamab activate bioforest-env</code></pre>
+</section>
+<section id="snakemake" class="level2">
+<h2 class="anchored" data-anchor-id="snakemake">Snakemake</h2>
+<pre><code>snakemake -np # dry run
+snakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag
+snakemake -j 1 --resources mem_mb=10000 # local run (test)</code></pre>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<ul>
+<li>TerraClimate</li>
+<li>SoilGrids</li>
+<li>TMF</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

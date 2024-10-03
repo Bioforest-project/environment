@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-10-02">
+<meta name="dcterms.date" content="2024-10-03">
 
 <title>environment</title>
 <style>
@@ -182,14 +182,11 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#project" id="toc-project" class="nav-link" data-scroll-target="#project">Project</a></li>
   <li><a href="#contribution" id="toc-contribution" class="nav-link" data-scroll-target="#contribution">Contribution</a></li>
   <li><a href="#help" id="toc-help" class="nav-link" data-scroll-target="#help">Help</a></li>
   <li><a href="#core-group" id="toc-core-group" class="nav-link" data-scroll-target="#core-group">Core group</a></li>
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#conda" id="toc-conda" class="nav-link" data-scroll-target="#conda">Conda</a></li>
-  <li><a href="#snakemake" id="toc-snakemake" class="nav-link" data-scroll-target="#snakemake">Snakemake</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -210,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 2, 2024</p>
+      <p class="date">October 3, 2024</p>
     </div>
   </div>
   
@@ -220,19 +217,45 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p><a href="#0"><img src="https://www.repostatus.org/badges/latest/wip.svg" class="img-fluid"></a> <a href="#0"><img src="https://github.com/Bioforest-project/environment/workflows/lint/badge.svg" class="img-fluid" alt="lint"></a></p>
 <section id="introduction" class="level1 unnumbered">
 <h1 class="unnumbered">Introduction</h1>
-<p><strong>environment</strong> is a sub-project of the <strong>BioForest</strong> project aimed at gathering environmental variables (to list) for data preparation within the project.</p>
+<p><strong>environment</strong> is a sub-project of the <a href="https://github.com/Bioforest-project"><strong>BioForest</strong></a> project aimed at gathering environmental variables of climate (<a href="https://www.climatologylab.org/terraclimate.html">TerraClimate</a>), soil (<a href="https://www.isric.org/explore/soilgrids">SoilGrids</a>) and landscape (<a href="https://forobs.jrc.ec.europa.eu/TMF">TMF</a>) for data preparation within the project.</p>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<p><strong>environment</strong> takes advantage of <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> for data retrieval defined by the sites list. First check the sites list in <code>config/sites.tsv</code> and you can run the whole workflow with <code>snakemake -j #cores –use-conda –keep-going</code> . Further details on usage can be found in <a href="https://bioforest-project.github.io/environment/10_methods.html" class="uri">https://bioforest-project.github.io/environment/10_methods.html</a> . Then all analyses rely on the quarto documents (<code>files.qmd</code>) that can be run with R and associated environment defined with <a href="https://rstudio.github.io/renv/articles/renv.html">renv</a>.</p>
+</section>
 <section id="project" class="level2">
 <h2 class="anchored" data-anchor-id="project">Project</h2>
-<p><strong>environment</strong> includes all codes to access the data (in <code>data/</code>) &amp; analyse the data (<code>files.qmd</code>) with associated <a href="https://bioforest-project.github.io/LoggingDiversity/">documentation and figures</a>. Intermediary files and outputs can be accessed in <code>outputs/</code>. The project takes advantage of <code>renv</code> to manage the R environment for enhanced reproducibility.</p>
+<p><strong>environment</strong> includes:</p>
+<ul>
+<li><a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a> workflow for automatic data retrieval:
+<ul>
+<li>Workflow definition in <code>Snakefile</code></li>
+<li>Worflow scripts in <code>scripts/</code></li>
+<li>Workflow configuration in <code>config/</code></li>
+<li>conda environments in <code>envs/</code></li>
+</ul></li>
+<li>Analyse of the data with associated <a href="https://bioforest-project.github.io/environment/">documentation and figures</a>:
+<ul>
+<li>Reproductive analyses in <code>files.qmd</code></li>
+<li>Resulting pages in <code>docs/</code></li>
+<li>Document structure definition in <code>_quarto.yml</code></li>
+</ul></li>
+<li>Data in <code>data/</code></li>
+<li>Intermediary files in <code>outputs/</code></li>
+<li>R environment definition with <a href="https://rstudio.github.io/renv/articles/renv.html">renv</a> in <code>renv/</code> and <code>renv/lock</code></li>
+<li>R files (<code>.Rbuildignore</code> , <code>.Rdata</code> , <code>.Rprofile</code> , <code>.Rhistory</code>)</li>
+<li>Git and GitHub files (<code>.gitignore</code> , <code>.github/</code>)</li>
+<li>Project documentation (<code>README.qmd</code> , <code>README.md</code> , <code>NEWS.md</code> )</li>
+</ul>
 <blockquote class="blockquote">
-<p>This will evolve to better integrate snakemake with conda</p>
+<p>Should we add a license?</p>
 </blockquote>
 </section>
 <section id="contribution" class="level2">
 <h2 class="anchored" data-anchor-id="contribution">Contribution</h2>
-<p>You can contribute to the project by forking the repository on github and cloning the fork to your machine using several options, including GitHub desktop GUI. Access to the data is limited and can be requested by emailing people from the core group (see below). Further informations on contribution are detailed in the online document: <a href="https://bioforest-project.github.io/environment/98_contributing.html" class="uri">https://bioforest-project.github.io/environment/98_contributing.html</a>.</p>
+<p>You can contribute to the project by forking the repository on github and cloning the fork to your machine using several options, including GitHub desktop GUI. Further informations on contribution are detailed in the online document: <a href="https://bioforest-project.github.io/environment/98_contributing.html" class="uri">https://bioforest-project.github.io/environment/98_contributing.html</a>.</p>
 </section>
 <section id="help" class="level2">
 <h2 class="anchored" data-anchor-id="help">Help</h2>
@@ -250,43 +273,6 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>The whole group consist of participants to the <a href="https://www.fondationbiodiversite.fr/la-frb-en-action/programmes-et-projets/le-cesab/bioforest/">Bioforest project</a>.</p>
 <p><img src="https://www.fondationbiodiversite.fr/wp-content/uploads/2023/10/bioforest-ws1_web.jpeg" class="img-fluid"></p>
-</section>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>This workflow is built on:</p>
-<ul>
-<li>Python ≥3.5</li>
-<li><a href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge</a></li>
-<li>Snakemake ≥5.24.1</li>
-</ul>
-<pre><code>conda activate base
-mamba create -c conda-forge -c bioconda -n snakemake snakemake
-conda activate snakemake
-snakemake --help</code></pre>
-<p>Once installed simply clone the workflow:</p>
-<pre><code>git clone git@github.com:Bioforest-project/environment.git
-cd DownClim
-snakemake -np </code></pre>
-</section>
-<section id="conda" class="level2">
-<h2 class="anchored" data-anchor-id="conda">Conda</h2>
-<pre><code>mamba env create -f envs/bioforest-env.yml # init
-mamba env update -f envs/bioforest-env.yml --prune # update
-mamab activate bioforest-env</code></pre>
-</section>
-<section id="snakemake" class="level2">
-<h2 class="anchored" data-anchor-id="snakemake">Snakemake</h2>
-<pre><code>snakemake -np # dry run
-snakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag
-snakemake -j 1 --resources mem_mb=10000 # local run (test)</code></pre>
-</section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<ul>
-<li>TerraClimate</li>
-<li>SoilGrids</li>
-<li>TMF</li>
-</ul>
 
 
 </section>

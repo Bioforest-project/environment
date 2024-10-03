@@ -1,3 +1,4 @@
+-   troll_eval 0.1.0.9007: readme & index update
 -   troll_eval 0.1.0.9006: adding lintr CI
 -   troll_eval 0.1.0.9005: all data all sites, needs to be described
 -   troll_eval 0.1.0.9004: TerraClimate all sites
