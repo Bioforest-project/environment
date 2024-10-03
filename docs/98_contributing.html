@@ -236,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="fork-the-repository" class="level2">
 <h2 class="anchored" data-anchor-id="fork-the-repository">Fork the repository</h2>
-<p>Then you’ll need to create a copy of the project. Project in Git are stored in repository. The repository versions follow a tree. Creating a copy is then called a fork. To do so, go on the repository page: <a href="https://github.com/Bioforest-project/LoggingDiversity" class="uri">https://github.com/Bioforest-project/LoggingDiversity</a> . Then use the button on the top right named “Fork” to fork the repository. I recommend you don’t change the name of your copy. More help an be found here: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo" class="uri">https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo</a>.</p>
+<p>Then you’ll need to create a copy of the project. Project in Git are stored in repository. The repository versions follow a tree. Creating a copy is then called a fork. To do so, go on the repository page: <a href="https://github.com/Bioforest-project/environment" class="uri">https://github.com/Bioforest-project/environment</a> . Then use the button on the top right named “Fork” to fork the repository. I recommend you don’t change the name of your copy. More help an be found here: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo" class="uri">https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo</a>.</p>
 </section>
 <section id="clone-your-fork" class="level2">
 <h2 class="anchored" data-anchor-id="clone-your-fork">Clone your fork</h2>
@@ -273,9 +273,12 @@ ul.task-list li input[type="checkbox"] {
 <p>First you need to install all the packages with renv using:</p>
 <pre><code>renv::restore()</code></pre>
 <p>It can be a bit long the first time because it’s setting up the whole environment but will be faster the next time.</p>
-<p>Then as described in the <a href="https://github.com/Bioforest-project/LoggingDiversity?tab=readme-ov-file#project">README</a>, you can use the scripts in <code>data/</code> to generate the data needed to run the project (for the moment only dummy data are available, and data access should be improved later).</p>
+<p>Then as described in the <a href="https://github.com/Bioforest-project/environment/blob/main/README.md">README</a>, you can use the scripts in <code>data/</code> to generate the data needed to run the project (for the moment only dummy data are available, and data access should be improved later).</p>
 <p>Then you can have a look, modify, or edit text of the analyses. All the analyses are done in the Quarto documents <code>file.qmd</code>. Quarto are reproducible documents that mix text and code and that are the basis of the online pages that you are reading right now. More information on Quarto can be found here: <a href="https://quarto.org/" class="uri">https://quarto.org/</a>.</p>
 <p>Once you are in a Quarto file, for instance this page corresponds to <code>98_contributing.qmd</code>, you can add text directly in the document and add R code in the form of chunks using CTRL+ALT+I, or the insert menu for executable cell, or the top right green button in RStudio. You can run the small chunk of code with the green arrow or with CTRL+ENTER as in any R script. To see the resulting document you can use the “Render” button in Rstudio or CTRL+SHIFT+K. Once you’ve finished updating the pages of different documents you can regenerate the whole numerical book in the “Build” panel with the “Render Book” button or CTRL+SHIFT+B.</p>
+<blockquote class="blockquote">
+<p>A description of <code>lintr</code> and <code>styler</code> packages should be added if we decide to keep it.</p>
+</blockquote>
 </section>
 <section id="commit" class="level2">
 <h2 class="anchored" data-anchor-id="commit">Commit</h2>
@@ -289,7 +292,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="pull-request" class="level2">
 <h2 class="anchored" data-anchor-id="pull-request">Pull request</h2>
-<p>Great, no you have contributed to the project on your machine and saved a copy online on GitHub. However, you don’t have actually contributed to the original project yet: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main" class="uri">https://github.com/Bioforest-project/LoggingDiversity/tree/main</a> . To do so you need to ask to send your changes to the main project/repository for us to review them and merge them. In Git/GitHub this is called a “Pull Request” because you are requesting that we pull your code into ours. To do so simply follow this guide: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request" class="uri">https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request</a>. Once your pull request is submitted let us handle it. It will open a dialogue page where we can exchange about your modification. We will discuss it with you, and if we all agree your contribution will be merged into the main repository and you will be listed as a project contributor, kudos!</p>
+<p>Great, no you have contributed to the project on your machine and saved a copy online on GitHub. However, you don’t have actually contributed to the original project yet. To do so you need to ask to send your changes to the main project/repository for us to review them and merge them. In Git/GitHub this is called a “Pull Request” because you are requesting that we pull your code into ours. To do so simply follow this guide: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request" class="uri">https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request</a>. Once your pull request is submitted let us handle it. It will open a dialogue page where we can exchange about your modification. We will discuss it with you, and if we all agree your contribution will be merged into the main repository and you will be listed as a project contributor, kudos!</p>
 </section>
 <section id="synchronize-fork" class="level2">
 <h2 class="anchored" data-anchor-id="synchronize-fork">Synchronize fork</h2>
@@ -297,7 +300,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="help" class="level2">
 <h2 class="anchored" data-anchor-id="help">Help</h2>
-<p>If you need help to contribute please preferentially create an issue on GitHub: <a href="https://github.com/Bioforest-project/LoggingDiversity/issues" class="uri">https://github.com/Bioforest-project/LoggingDiversity/issues</a>. You may however reach us by mail with people from the core group.</p>
+<p>If you need help to contribute please preferentially create an issue on GitHub: <a href="https://github.com/Bioforest-project/LoggingDiversity/issues" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/issues" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/issues" class="uri">/issues</a>. You may however reach us by mail with people from the core group.</p>
 </section>
 <section id="contributing-to-this-page" class="level2">
 <h2 class="anchored" data-anchor-id="contributing-to-this-page">Contributing to this page</h2>

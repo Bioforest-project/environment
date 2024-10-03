@@ -8,8 +8,6 @@ library(tidyverse)
 
 For the moment we only used information on total forest cover area in a radius of 1-km from TMF [@europeancommission.jointresearchcentre.2020]. But the radius could be changed and other finer landscape indices could be derived and finer classification from TMF data could be used. Additionally, in landscape metrics WS1 metadata file listed also distance to the nearest village or road which could be simply extracted from openstreetmaps using R ([osmdata](#%7C%20message:%20false%20#%7C%20warning:%20false%20#%7C%20fig-cap: "Tapajós km 67 20E forest cover through time.")).
 
-> The workflow worked well at the exception of `r (anti_join(read_tsv("outputs/sites.tsv") %>% select(plot, site) %>% unique(), read_tsv("outputs/landscape.tsv") %>% select(plot, site) %>% unique()) %>% select(site) %>% unique())$site %>% paste(collapse = ", ")` . This is because Tene location is wrong and is not in land.
-
 ```{r prep}
 #| eval: false
 list.files("data/landscape/", full.names = TRUE) %>%
@@ -27,7 +25,7 @@ list.files("data/landscape/", full.names = TRUE) %>%
 
 Most sites showed low deforestation level in the 90s but most of them showed deforestation increasing through time.
 
-> There are issues with locations of Lesong, Malinau, Missiones, Sungai Lalang, Ulu Muda, and Uppangala that doesn't fall on forest according to TMF.
+> There are issues with locations of Lesong, Malinau, Missiones, Sungai Lalang, Tené, Ulu Muda, and Uppangala that doesn't fall on forest according to TMF.
 
 ```{r allsites}
 #| message: false

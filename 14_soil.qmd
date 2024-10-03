@@ -20,8 +20,6 @@ We retrieved all data from SoilGrids detailed below [@poggio2021], but the spati
 -   OCD: Organic carbon density, kg dm³
 -   OCS: Organic carbon stocks, kg m^2^
 
-> The workflow worked well at the exception of `r (anti_join(read_tsv("outputs/sites.tsv") %>% select(plot, site) %>% unique(), read_tsv("outputs/soil.tsv") %>% select(plot, site) %>% unique()) %>% select(site) %>% unique())$site %>% paste(collapse = ", ")` . This is because Tene location is wrong and is not in land.
-
 ```{r prep}
 #| eval: false
 list.files("data/soil/", full.names = TRUE) %>%
@@ -50,6 +48,8 @@ list.files("data/soil/", full.names = TRUE) %>%
 ```
 
 > BAFOG and Paracou are lacking because too close to the sea.
+
+The plots showed low variation within site but wider variation among sites with for instance sandy soils from Iwokrama opposed to silt and clay soils from Montagne Tortue.
 
 ```{r allplot}
 #| message: false
@@ -140,6 +140,10 @@ read_tsv("outputs/soil.tsv") %>%
   scale_color_discrete("") +
   theme(legend.position = "bottom")
 ```
+
+The first ordination axis retained almost half of the variations of the 10 soil variables and opposed sandy poor soils to more fertile silty soils.
+
+> This is a very quick interpretation of the figure and should be explored more in depth.
 
 ```{r pca}
 #| message: false

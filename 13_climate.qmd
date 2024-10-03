@@ -6,6 +6,17 @@ library(tidyverse)
 
 # Climate {.unnumbered}
 
+We retrieved all data from TerraClimate detailed below [@abatzoglou2018]. This could be compared to site data, but with issues regarding site data standardization, representativeness, and validation.
+
+-   ET: Actual evapotranspiration, mm
+-   CWD: Climate water deficit, mm
+-   Tmax: Maximum temperature, °C
+-   Tmin: Minimum temperature, °C
+-   PDSI: Palmer Drought Severity Index
+-   PET: Potential evapotranpiration, mm
+-   Pr: precipitation, mm
+-   VPD: Vapour Pressure Deficit, kPa
+
 ```{r prepclim}
 #| eval: false
 list.files("data/climate/", full.names = TRUE) %>%
@@ -18,10 +29,12 @@ list.files("data/climate/", full.names = TRUE) %>%
   write_tsv("outputs/climate.tsv")
 ```
 
-```{r betterplot}
+For a quick exploration of each site climatology we first had a look to umbrothermal diagrams for the mean climate of each site, opposing for instance highly seasonal monsoon regimes from India un Uppangala to less seasonal regimes from Missiones in Argentina.
+
+```{r umbrothermal}
 #| message: false
 #| warning: false
-#| fig-cap: "Climate."
+#| fig-cap: "Umbrothermal diagrams for the mean climate of each site."
 read_tsv("outputs/climate.tsv") %>%
   select(-lon, -lat) %>%
   group_by(site, month) %>%
@@ -49,10 +62,12 @@ read_tsv("outputs/climate.tsv") %>%
   facet_wrap(~site)
 ```
 
-```{r allplot}
+Looking more in depth to each variable per site, plot and month better showed the climatology for each variable with relative low variation within site but large variation among sites.
+
+```{r allvars}
 #| message: false
 #| warning: false
-#| fig-cap: "Climate."
+#| fig-cap: "Climate variables per site, plot and month."
 read_tsv("outputs/climate.tsv") %>%
   gather(variable, value, -site, -month, -plot, -lat, -lon) %>%
   mutate(var_long = recode(variable,
@@ -75,25 +90,29 @@ read_tsv("outputs/climate.tsv") %>%
     labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")
   ) +
   theme_bw() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  scale_color_discrete("")
 ```
+
+To ease plot and sites comparisons, we derived yearly metrics of sum (evapotranspiration, climatic water deficit, precipitation), minimum (minimum temperature), or maximum (palmer drought index, maximum temperature, vapour pressure deficit) depending on the variables. This better revealed among sites differences with for instance highest CWD at Uppangala despite highest total precipitation.
+
+> Other indices could be derived such as widely used bioclimatic variables.
 
 ```{r metrics}
 #| message: false
 #| warning: false
-#| fig-cap: "Climate."
+#| fig-cap: "Yearly mean climate variables per site."
 read_tsv("outputs/climate.tsv") %>%
   group_by(site, plot) %>%
   summarise(
-    aet = sum(aet), def = sum(def), pdsi_max = max(pdsi), pdsi_min = min(pdsi),
-    pdsi_mean = mean(pdsi), pet = sum(pet),
+    aet = sum(aet), def = sum(def), pdsi = max(pdsi), pet = sum(pet),
     pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd_max = max(vpd)
   ) %>%
   gather(variable, value, -site, -plot) %>%
   mutate(var_long = recode(variable,
     "aet" = "Evapotranspiration [ mm ]",
     "def" = "Climate water deficit [ mm ]",
-    "pdsi_min" = "Min PDSI",
+    "pdsi" = "Palmer Drought Severity Index",
     "pdsi_max" = "Max PDSI",
     "pdsi_mean" = "Mean PDSI",
     "pet" = "Pot evapotranspiration [ mm ]",
@@ -108,20 +127,23 @@ read_tsv("outputs/climate.tsv") %>%
   theme_bw() +
   coord_flip() +
   theme(legend.position = "none", axis.title = element_blank(),
-        axis.text.y = element_text(size = 7))
+        axis.text.y = element_text(size = 6))
 ```
+
+The first ordination axis retained almost half of the variations of the 8 climate variables.
+
+> This is a very quick interpretation of the figure and should be explored more in depth.
 
 ```{r pca}
 #| message: false
 #| warning: false
-#| fig-cap: "Climate variables PCA per site and plot."
+#| fig-cap: "Yearly mean climate variables PCA per site and plot."
 library(ggfortify)
 data <- read_tsv("outputs/climate.tsv") %>%
   group_by(site, plot) %>%
   summarise(
-    aet = sum(aet), def = sum(def), pdsi_max = max(pdsi), pdsi_min = min(pdsi),
-    pdsi_mean = mean(pdsi), pet = sum(pet),
-    pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd_max = max(vpd)
+    et = sum(aet), cwd = sum(def), pdsi = max(pdsi), pet = sum(pet),
+    pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd = max(vpd)
   ) %>%
   ungroup()
 pca <- prcomp(data %>% select(-site, -plot), scale. = TRUE)

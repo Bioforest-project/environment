@@ -20,7 +20,7 @@ Simply go on <https://github.com/> and open an account.
 
 ## Fork the repository
 
-Then you'll need to create a copy of the project. Project in Git are stored in repository. The repository versions follow a tree. Creating a copy is then called a fork. To do so, go on the repository page: <https://github.com/Bioforest-project/LoggingDiversity> . Then use the button on the top right named "Fork" to fork the repository. I recommend you don't change the name of your copy. More help an be found here: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo>.
+Then you'll need to create a copy of the project. Project in Git are stored in repository. The repository versions follow a tree. Creating a copy is then called a fork. To do so, go on the repository page: <https://github.com/Bioforest-project/environment> . Then use the button on the top right named "Fork" to fork the repository. I recommend you don't change the name of your copy. More help an be found here: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo>.
 
 ## Clone your fork
 
@@ -66,11 +66,13 @@ renv::restore()
 
 It can be a bit long the first time because it's setting up the whole environment but will be faster the next time.
 
-Then as described in the [README](https://github.com/Bioforest-project/LoggingDiversity?tab=readme-ov-file#project), you can use the scripts in `data/` to generate the data needed to run the project (for the moment only dummy data are available, and data access should be improved later).
+Then as described in the [README](https://github.com/Bioforest-project/environment/blob/main/README.md), you can use the scripts in `data/` to generate the data needed to run the project (for the moment only dummy data are available, and data access should be improved later).
 
 Then you can have a look, modify, or edit text of the analyses. All the analyses are done in the Quarto documents `file.qmd`. Quarto are reproducible documents that mix text and code and that are the basis of the online pages that you are reading right now. More information on Quarto can be found here: <https://quarto.org/>.
 
 Once you are in a Quarto file, for instance this page corresponds to `98_contributing.qmd`, you can add text directly in the document and add R code in the form of chunks using CTRL+ALT+I, or the insert menu for executable cell, or the top right green button in RStudio. You can run the small chunk of code with the green arrow or with CTRL+ENTER as in any R script. To see the resulting document you can use the "Render" button in Rstudio or CTRL+SHIFT+K. Once you've finished updating the pages of different documents you can regenerate the whole numerical book in the "Build" panel with the "Render Book" button or CTRL+SHIFT+B.
+
+> A description of `lintr` and `styler` packages should be added if we decide to keep it.
 
 ## Commit
 
@@ -86,7 +88,7 @@ Now that you have a new version locally, or several, you may want to save them o
 
 ## Pull request
 
-Great, no you have contributed to the project on your machine and saved a copy online on GitHub. However, you don't have actually contributed to the original project yet: <https://github.com/Bioforest-project/LoggingDiversity/tree/main> . To do so you need to ask to send your changes to the main project/repository for us to review them and merge them. In Git/GitHub this is called a "Pull Request" because you are requesting that we pull your code into ours. To do so simply follow this guide: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request>. Once your pull request is submitted let us handle it. It will open a dialogue page where we can exchange about your modification. We will discuss it with you, and if we all agree your contribution will be merged into the main repository and you will be listed as a project contributor, kudos!
+Great, no you have contributed to the project on your machine and saved a copy online on GitHub. However, you don't have actually contributed to the original project yet. To do so you need to ask to send your changes to the main project/repository for us to review them and merge them. In Git/GitHub this is called a "Pull Request" because you are requesting that we pull your code into ours. To do so simply follow this guide: <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request>. Once your pull request is submitted let us handle it. It will open a dialogue page where we can exchange about your modification. We will discuss it with you, and if we all agree your contribution will be merged into the main repository and you will be listed as a project contributor, kudos!
 
 ## Synchronize fork
 
@@ -94,7 +96,7 @@ Last but not least, if you've followed until here, you might have a question: "b
 
 ## Help
 
-If you need help to contribute please preferentially create an issue on GitHub: <https://github.com/Bioforest-project/LoggingDiversity/issues>. You may however reach us by mail with people from the core group.
+If you need help to contribute please preferentially create an issue on GitHub: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/issues){.uri}[environment](https://github.com/Bioforest-project/environment/issues){.uri}[/issues](https://github.com/Bioforest-project/LoggingDiversity/issues){.uri}. You may however reach us by mail with people from the core group.
 
 ## Contributing to this page
 

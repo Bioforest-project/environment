@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -180,10 +199,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#conda" id="toc-conda" class="nav-link" data-scroll-target="#conda">Conda</a></li>
+  <li><a href="#origin" id="toc-origin" class="nav-link active" data-scroll-target="#origin">Origin</a></li>
+  <li><a href="#retrieval" id="toc-retrieval" class="nav-link" data-scroll-target="#retrieval">Retrieval</a>
+  <ul class="collapse">
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#snakemake" id="toc-snakemake" class="nav-link" data-scroll-target="#snakemake">Snakemake</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#conda" id="toc-conda" class="nav-link" data-scroll-target="#conda">Conda</a></li>
+  </ul></li>
+  <li><a href="#analyses" id="toc-analyses" class="nav-link" data-scroll-target="#analyses">Analyses</a></li>
   </ul>
 </nav>
     </div>
@@ -207,11 +230,23 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases relying here on <a href="https://www.climatologylab.org/terraclimate.html">TerraClimate</a>. The code is available here: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/tree/main/data" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">/tree/main/data</a> .</p>
-<p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases relying here on <a href="https://soilgrids.org/">SoilGrids</a>. The code is available here: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/tree/main/data" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">/tree/main/data</a> .</p>
-<p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases relying here on <a href="https://forobs.jrc.ec.europa.eu/TMF">TMF</a>. The code is available here: <a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">https://github.com/Bioforest-project/</a><a href="https://github.com/Bioforest-project/environment/tree/main/data" class="uri">environment</a><a href="https://github.com/Bioforest-project/LoggingDiversity/tree/main/data" class="uri">/tree/main/data</a> .</p>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<section id="origin" class="level2">
+<h2 class="anchored" data-anchor-id="origin">Origin</h2>
+<blockquote class="blockquote">
+<p><a href="https://www.climatologylab.org/terraclimate.html">TerraClimate</a> is a dataset of monthly climate and climatic water balance for global terrestrial surfaces from 1958-2019. These data provide important inputs for ecological and hydrological studies at global scales that require high spatial resolution and time-varying&nbsp;data.&nbsp;All data have&nbsp;monthly temporal resolution and a ~4-km (1/24th degree) spatial resolution. The data cover the period from 1958-2020. We plan to update these data periodically (annually). <span class="citation" data-cites="abatzoglou2018">(<a href="99_references.html#ref-abatzoglou2018" role="doc-biblioref">Abatzoglou et al. 2018</a>)</span></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><a href="https://www.isric.org/explore/soilgrids">SoilGrids</a> is a system for global digital soil mapping that uses state-of-the-art machine learning methods to map the spatial distribution of soil properties across the globe. SoilGrids prediction models are fitted using over 230&nbsp;000 soil profile observations from the <a href="https://www.isric.org/explore/wosis/faq-wosis" title="Go to WoSIS, FAQ pages">WoSIS database</a> and a series of environmental covariates. Covariates were selected from a pool of over 400 environmental layers from Earth observation derived products and other environmental information including climate, land cover and terrain morphology. The outputs of SoilGrids are global soil property maps at six standard depth intervals (according to the GlobalSoilMap IUSS working group and its specifications) at a spatial resolution of 250 meters. Prediction uncertainty is quantified by the lower and upper limits of a 90% prediction interval. The additional&nbsp;uncertainty layer displayed at <a href="https://soilgrids.org/">soilgrids.org</a>&nbsp;is the ratio between the inter-quantile range and the median. The SoilGrids maps are publicly available under the <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0 License</a>. <span class="citation" data-cites="poggio2021">(<a href="99_references.html#ref-poggio2021" role="doc-biblioref">Poggio et al. 2021</a>)</span></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><a href="https://forobs.jrc.ec.europa.eu/TMF">TMF</a>: The European Commission’s Joint Research Centre developed this new dataset on forest cover change in tropical moist forests (TMF) using 42 years of Landsat time series. The wall-to-wall maps at 0.09 ha resolution (30m) depict the TMF extent and the related disturbances (deforestation and degradation), and post-deforestation recovery (or forest regrowth) through two complementary thematic layers: a transition map and an annual change collection over the period 1990-2023. Each disturbance (deforestation or degradation) is characterized by its timing and intensity. Deforestation refers to a change in land cover (from forest to non-forested land) when degradation refers to a temporary disturbance in a forest remaining forested such as selective logging, fires and unusual weather events (hurricanes, droughts, blowdown). <span class="citation" data-cites="europeancommission.jointresearchcentre.2020">(<a href="99_references.html#ref-europeancommission.jointresearchcentre.2020" role="doc-biblioref">European Commission. Joint Research Centre. 2020</a>)</span></p>
+</blockquote>
+</section>
+<section id="retrieval" class="level2">
+<h2 class="anchored" data-anchor-id="retrieval">Retrieval</h2>
+<p>We developed a <a href="https://snakemake.readthedocs.io/en/stable/">snakemake</a> and <a href="https://anaconda.org/anaconda/conda">conda</a> python workflow for automatic climate data gathering from global databases.</p>
+<section id="installation" class="level3">
+<h3 class="anchored" data-anchor-id="installation">Installation</h3>
 <p>This workflow is built on:</p>
 <ul>
 <li>Python ≥3.5</li>
@@ -227,27 +262,41 @@ snakemake --help</code></pre>
 cd DownClim
 snakemake -np </code></pre>
 </section>
-<section id="conda" class="level2">
-<h2 class="anchored" data-anchor-id="conda">Conda</h2>
+<section id="snakemake" class="level3">
+<h3 class="anchored" data-anchor-id="snakemake">Snakemake</h3>
+<p>To run the worklfow you can use the following commands that are by order (1) a dry run to test and list the operations, (2) the creation of a direct acyclic graph with the workflow, and (3) a run using a single core and the conda environment.</p>
+<pre><code>snakemake -np # dry run
+snakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag
+snakemake -j 1 --use-conda # local run (test)</code></pre>
+<p>In terms of benchmarking, on my personal computer with 10 cores the worklow took 45 minutes.</p>
+</section>
+<section id="conda" class="level3">
+<h3 class="anchored" data-anchor-id="conda">Conda</h3>
+<p>To test the scripts individually you can build the needed conda environment as follow:</p>
 <pre><code>mamba env create -f envs/bioforest-env.yml # init
 mamba env update -f envs/bioforest-env.yml --prune # update
 mamab activate bioforest-env</code></pre>
 </section>
-<section id="snakemake" class="level2">
-<h2 class="anchored" data-anchor-id="snakemake">Snakemake</h2>
-<pre><code>snakemake -np # dry run
-snakemake --dag | dot -Tsvg &gt; dag/dag.svg # dag
-snakemake -j 1 --resources mem_mb=10000 # local run (test)</code></pre>
 </section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<ul>
-<li>TerraClimate</li>
-<li>SoilGrids</li>
-<li>TMF</li>
-</ul>
+<section id="analyses" class="level2">
+<h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
+<p>This is mainly data preparation, so the variables are only plotted and their correlation examined using principal component analyses.</p>
+<blockquote class="blockquote">
+<p>To be developed?</p>
+</blockquote>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-abatzoglou2018" class="csl-entry" role="listitem">
+Abatzoglou, John T., Solomon Z. Dobrowski, Sean A. Parks, and Katherine C. Hegewisch. 2018. <span>“TerraClimate, a High-Resolution Global Dataset of Monthly Climate and Climatic Water Balance from 1958<span></span>2015.”</span> <em>Scientific Data</em> 5 (1). <a href="https://doi.org/10.1038/sdata.2017.191">https://doi.org/10.1038/sdata.2017.191</a>.
+</div>
+<div id="ref-europeancommission.jointresearchcentre.2020" class="csl-entry" role="listitem">
+European Commission. Joint Research Centre. 2020. <em>Long-term monitoring of tropical moist forest extent (from 1990 to 2019): description of the dataset.</em> LU: Publications Office. <a href="https://doi.org/10.2760/70243">https://doi.org/10.2760/70243</a>.
+</div>
+<div id="ref-poggio2021" class="csl-entry" role="listitem">
+Poggio, Laura, Luis M. de Sousa, Niels H. Batjes, Gerard B. M. Heuvelink, Bas Kempen, Eloi Ribeiro, and David Rossiter. 2021. <span>“SoilGrids 2.0: Producing Soil Information for the Globe with Quantified Spatial Uncertainty.”</span> <em>SOIL</em> 7 (1): 217–40. <a href="https://doi.org/10.5194/soil-7-217-2021">https://doi.org/10.5194/soil-7-217-2021</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

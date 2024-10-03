@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -232,6 +251,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<p>We retrieved all data from TerraClimate detailed below <span class="citation" data-cites="abatzoglou2018">(<a href="99_references.html#ref-abatzoglou2018" role="doc-biblioref">Abatzoglou et al. 2018</a>)</span>. This could be compared to site data, but with issues regarding site data standardization, representativeness, and validation.</p>
+<ul>
+<li>ET: Actual evapotranspiration, mm</li>
+<li>CWD: Climate water deficit, mm</li>
+<li>Tmax: Maximum temperature, °C</li>
+<li>Tmin: Minimum temperature, °C</li>
+<li>PDSI: Palmer Drought Severity Index</li>
+<li>PET: Potential evapotranpiration, mm</li>
+<li>Pr: precipitation, mm</li>
+<li>VPD: Vapour Pressure Deficit, kPa</li>
+</ul>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -245,6 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_tsv</span>(<span class="st">"outputs/climate.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>For a quick exploration of each site climatology we first had a look to umbrothermal diagrams for the mean climate of each site, opposing for instance highly seasonal monsoon regimes from India un Uppangala to less seasonal regimes from Missiones in Argentina.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -277,12 +308,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="13_climate_files/figure-html/betterplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Climate.</figcaption>
+<p><img src="13_climate_files/figure-html/umbrothermal-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Umbrothermal diagrams for the mean climate of each site.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>Looking more in depth to each variable per site, plot and month better showed the climatology for each variable with relative low variation within site but large variation among sites.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -308,57 +340,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"J"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"A"</span>, <span class="st">"M"</span>, <span class="st">"J"</span>, <span class="st">"J"</span>, <span class="st">"A"</span>, <span class="st">"S"</span>, <span class="st">"O"</span>, <span class="st">"N"</span>, <span class="st">"D"</span>)</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="13_climate_files/figure-html/allplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Climate.</figcaption>
+<p><img src="13_climate_files/figure-html/allvars-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Climate variables per site, plot and month.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>To ease plot and sites comparisons, we derived yearly metrics of sum (evapotranspiration, climatic water deficit, precipitation), minimum (minimum temperature), or maximum (palmer drought index, maximum temperature, vapour pressure deficit) depending on the variables. This better revealed among sites differences with for instance highest CWD at Uppangala despite highest total precipitation.</p>
+<blockquote class="blockquote">
+<p>Other indices could be derived such as widely used bioclimatic variables.</p>
+</blockquote>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"outputs/climate.tsv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, plot) <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">aet =</span> <span class="fu">sum</span>(aet), <span class="at">def =</span> <span class="fu">sum</span>(def), <span class="at">pdsi_max =</span> <span class="fu">max</span>(pdsi), <span class="at">pdsi_min =</span> <span class="fu">min</span>(pdsi),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">pdsi_mean =</span> <span class="fu">mean</span>(pdsi), <span class="at">pet =</span> <span class="fu">sum</span>(pet),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr =</span> <span class="fu">sum</span>(pr), <span class="at">tmax =</span> <span class="fu">max</span>(tmmx), <span class="at">tmin =</span> <span class="fu">min</span>(tmmn), <span class="at">vpd_max =</span> <span class="fu">max</span>(vpd)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(variable, value, <span class="sc">-</span>site, <span class="sc">-</span>plot) <span class="sc">%&gt;%</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_long =</span> <span class="fu">recode</span>(variable,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"aet"</span> <span class="ot">=</span> <span class="st">"Evapotranspiration [ mm ]"</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"def"</span> <span class="ot">=</span> <span class="st">"Climate water deficit [ mm ]"</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pdsi_min"</span> <span class="ot">=</span> <span class="st">"Min PDSI"</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pdsi_max"</span> <span class="ot">=</span> <span class="st">"Max PDSI"</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pdsi_mean"</span> <span class="ot">=</span> <span class="st">"Mean PDSI"</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pet"</span> <span class="ot">=</span> <span class="st">"Pot evapotranspiration [ mm ]"</span>,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pr"</span> <span class="ot">=</span> <span class="st">"Precipitation [ mm ]"</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tmin"</span> <span class="ot">=</span> <span class="st">"Min temperature [ °C ]"</span>,</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tmax"</span> <span class="ot">=</span> <span class="st">"Max temperature [ °C ]"</span>,</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"vpd_max"</span> <span class="ot">=</span> <span class="st">"Max VPD [ kPA ]"</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(site, value, <span class="at">fill =</span> site, <span class="at">group =</span> <span class="fu">paste</span>(site, plot))) <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>var_long, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">aet =</span> <span class="fu">sum</span>(aet), <span class="at">def =</span> <span class="fu">sum</span>(def), <span class="at">pdsi =</span> <span class="fu">max</span>(pdsi), <span class="at">pet =</span> <span class="fu">sum</span>(pet),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr =</span> <span class="fu">sum</span>(pr), <span class="at">tmax =</span> <span class="fu">max</span>(tmmx), <span class="at">tmin =</span> <span class="fu">min</span>(tmmn), <span class="at">vpd_max =</span> <span class="fu">max</span>(vpd)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(variable, value, <span class="sc">-</span>site, <span class="sc">-</span>plot) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_long =</span> <span class="fu">recode</span>(variable,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"aet"</span> <span class="ot">=</span> <span class="st">"Evapotranspiration [ mm ]"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"def"</span> <span class="ot">=</span> <span class="st">"Climate water deficit [ mm ]"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pdsi"</span> <span class="ot">=</span> <span class="st">"Palmer Drought Severity Index"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pdsi_max"</span> <span class="ot">=</span> <span class="st">"Max PDSI"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pdsi_mean"</span> <span class="ot">=</span> <span class="st">"Mean PDSI"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pet"</span> <span class="ot">=</span> <span class="st">"Pot evapotranspiration [ mm ]"</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pr"</span> <span class="ot">=</span> <span class="st">"Precipitation [ mm ]"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tmin"</span> <span class="ot">=</span> <span class="st">"Min temperature [ °C ]"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tmax"</span> <span class="ot">=</span> <span class="st">"Max temperature [ °C ]"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"vpd_max"</span> <span class="ot">=</span> <span class="st">"Max VPD [ kPA ]"</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(site, value, <span class="at">fill =</span> site, <span class="at">group =</span> <span class="fu">paste</span>(site, plot))) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>var_long, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="13_climate_files/figure-html/metrics-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Climate.</figcaption>
+<figcaption class="figure-caption">Yearly mean climate variables per site.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>The first ordination axis retained almost half of the variations of the 8 climate variables.</p>
+<blockquote class="blockquote">
+<p>This is a very quick interpretation of the figure and should be explored more in depth.</p>
+</blockquote>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -366,32 +406,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"outputs/climate.tsv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, plot) <span class="sc">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">aet =</span> <span class="fu">sum</span>(aet), <span class="at">def =</span> <span class="fu">sum</span>(def), <span class="at">pdsi_max =</span> <span class="fu">max</span>(pdsi), <span class="at">pdsi_min =</span> <span class="fu">min</span>(pdsi),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pdsi_mean =</span> <span class="fu">mean</span>(pdsi), <span class="at">pet =</span> <span class="fu">sum</span>(pet),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr =</span> <span class="fu">sum</span>(pr), <span class="at">tmax =</span> <span class="fu">max</span>(tmmx), <span class="at">tmin =</span> <span class="fu">min</span>(tmmn), <span class="at">vpd_max =</span> <span class="fu">max</span>(vpd)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>site, <span class="sc">-</span>plot), <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(pca,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">loadings =</span> <span class="cn">TRUE</span>, <span class="at">loadings.label =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">loadings.label.repel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data, <span class="at">colour =</span> <span class="st">"site"</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">et =</span> <span class="fu">sum</span>(aet), <span class="at">cwd =</span> <span class="fu">sum</span>(def), <span class="at">pdsi =</span> <span class="fu">max</span>(pdsi), <span class="at">pet =</span> <span class="fu">sum</span>(pet),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr =</span> <span class="fu">sum</span>(pr), <span class="at">tmax =</span> <span class="fu">max</span>(tmmx), <span class="at">tmin =</span> <span class="fu">min</span>(tmmn), <span class="at">vpd =</span> <span class="fu">max</span>(vpd)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>site, <span class="sc">-</span>plot), <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(pca,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">loadings =</span> <span class="cn">TRUE</span>, <span class="at">loadings.label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">loadings.label.repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data, <span class="at">colour =</span> <span class="st">"site"</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="13_climate_files/figure-html/pca-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Climate variables PCA per site and plot.</figcaption>
+<figcaption class="figure-caption">Yearly mean climate variables PCA per site and plot.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-abatzoglou2018" class="csl-entry" role="listitem">
+Abatzoglou, John T., Solomon Z. Dobrowski, Sean A. Parks, and Katherine C. Hegewisch. 2018. <span>“TerraClimate, a High-Resolution Global Dataset of Monthly Climate and Climatic Water Balance from 1958<span></span>2015.”</span> <em>Scientific Data</em> 5 (1). <a href="https://doi.org/10.1038/sdata.2017.191">https://doi.org/10.1038/sdata.2017.191</a>.
+</div>
+</div>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

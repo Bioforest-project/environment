@@ -6,13 +6,19 @@ library(tidyverse)
 
 # Methods {.unnumbered}
 
-We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [TerraClimate](https://www.climatologylab.org/terraclimate.html). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
+## Origin
 
-We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [SoilGrids](https://soilgrids.org/). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
+> [TerraClimate](https://www.climatologylab.org/terraclimate.html) is a dataset of monthly climate and climatic water balance for global terrestrial surfaces from 1958-2019. These data provide important inputs for ecological and hydrological studies at global scales that require high spatial resolution and time-varying data. All data have monthly temporal resolution and a \~4-km (1/24th degree) spatial resolution. The data cover the period from 1958-2020. We plan to update these data periodically (annually). [@abatzoglou2018]
 
-We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [TMF](https://forobs.jrc.ec.europa.eu/TMF). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
+> [SoilGrids](https://www.isric.org/explore/soilgrids) is a system for global digital soil mapping that uses state-of-the-art machine learning methods to map the spatial distribution of soil properties across the globe. SoilGrids prediction models are fitted using over 230 000 soil profile observations from the [WoSIS database](https://www.isric.org/explore/wosis/faq-wosis "Go to WoSIS, FAQ pages") and a series of environmental covariates. Covariates were selected from a pool of over 400 environmental layers from Earth observation derived products and other environmental information including climate, land cover and terrain morphology. The outputs of SoilGrids are global soil property maps at six standard depth intervals (according to the GlobalSoilMap IUSS working group and its specifications) at a spatial resolution of 250 meters. Prediction uncertainty is quantified by the lower and upper limits of a 90% prediction interval. The additional uncertainty layer displayed at [soilgrids.org](https://soilgrids.org/) is the ratio between the inter-quantile range and the median. The SoilGrids maps are publicly available under the [CC-BY 4.0 License](https://creativecommons.org/licenses/by/4.0/). [@poggio2021]
 
-## Installation
+> [TMF](https://forobs.jrc.ec.europa.eu/TMF): The European Commission’s Joint Research Centre developed this new dataset on forest cover change in tropical moist forests (TMF) using 42 years of Landsat time series. The wall-to-wall maps at 0.09 ha resolution (30m) depict the TMF extent and the related disturbances (deforestation and degradation), and post-deforestation recovery (or forest regrowth) through two complementary thematic layers: a transition map and an annual change collection over the period 1990-2023. Each disturbance (deforestation or degradation) is characterized by its timing and intensity. Deforestation refers to a change in land cover (from forest to non-forested land) when degradation refers to a temporary disturbance in a forest remaining forested such as selective logging, fires and unusual weather events (hurricanes, droughts, blowdown). [@europeancommission.jointresearchcentre.2020]
+
+## Retrieval
+
+We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases.
+
+### Installation
 
 This workflow is built on:
 
@@ -35,7 +41,21 @@ cd DownClim
 snakemake -np 
 ```
 
-## Conda
+### Snakemake
+
+To run the worklfow you can use the following commands that are by order (1) a dry run to test and list the operations, (2) the creation of a direct acyclic graph with the workflow, and (3) a run using a single core and the conda environment.
+
+```         
+snakemake -np # dry run
+snakemake --dag | dot -Tsvg > dag/dag.svg # dag
+snakemake -j 1 --use-conda # local run (test)
+```
+
+In terms of benchmarking, on my personal computer with 10 cores the worklow took 45 minutes.
+
+### Conda
+
+To test the scripts individually you can build the needed conda environment as follow:
 
 ```         
 mamba env create -f envs/bioforest-env.yml # init
@@ -43,16 +63,8 @@ mamba env update -f envs/bioforest-env.yml --prune # update
 mamab activate bioforest-env
 ```
 
-## Snakemake
+## Analyses
 
-```         
-snakemake -np # dry run
-snakemake --dag | dot -Tsvg > dag/dag.svg # dag
-snakemake -j 1 --resources mem_mb=10000 # local run (test)
-```
+This is mainly data preparation, so the variables are only plotted and their correlation examined using principal component analyses.
 
-## Data
-
--   TerraClimate
--   SoilGrids
--   TMF
+> To be developed?
