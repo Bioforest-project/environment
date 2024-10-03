@@ -24,29 +24,29 @@ We retrieved all data from SoilGrids detailed below [@poggio2021], but the spati
 
 ```{r prep}
 #| eval: false
-list.files("data/soil/", full.names = TRUE) %>% 
-  read_tsv() %>% 
-  select(-time) %>% 
-  gather(variable, value, -site, -plot, -lon, -lat) %>% 
-  separate(variable, c("variable", "depth"), "_") %>% 
-  separate(depth, c("mindepth", "depth"), "-") %>% 
-  mutate(depth = as.numeric(gsub("cm", "", depth))) %>% 
-  select(-mindepth) %>% 
-  pivot_wider(names_from = variable, values_from = value) %>% 
+list.files("data/soil/", full.names = TRUE) %>%
+  read_tsv() %>%
+  select(-time) %>%
+  gather(variable, value, -site, -plot, -lon, -lat) %>%
+  separate(variable, c("variable", "depth"), "_") %>%
+  separate(depth, c("mindepth", "depth"), "-") %>%
+  mutate(depth = as.numeric(gsub("cm", "", depth))) %>%
+  select(-mindepth) %>%
+  pivot_wider(names_from = variable, values_from = value) %>%
   mutate(
-    bdod = bdod/100,
-    cec = cec/10,
-    cfvo = cfvo/10,
-    clay = clay/10,
-    sand = sand/10,
-    silt = silt/10,
-    nitrogen = nitrogen/100,
-    phh2o = phh2o/10,
-    soc = soc/10,
-    ocd = ocd/10,
-    ocs = ocs/10
-  ) %>% 
-  write_tsv("outputs/soil.tsv") 
+    bdod = bdod / 100,
+    cec = cec / 10,
+    cfvo = cfvo / 10,
+    clay = clay / 10,
+    sand = sand / 10,
+    silt = silt / 10,
+    nitrogen = nitrogen / 100,
+    phh2o = phh2o / 10,
+    soc = soc / 10,
+    ocd = ocd / 10,
+    ocs = ocs / 10
+  ) %>%
+  write_tsv("outputs/soil.tsv")
 ```
 
 > BAFOG and Paracou are lacking because too close to the sea.
@@ -55,30 +55,32 @@ list.files("data/soil/", full.names = TRUE) %>%
 #| message: false
 #| warning: false
 #| fig-cap: "Mean soil data per site and depth."
-read_tsv("outputs/soil.tsv") %>% 
-  select(-lon, -lat, -plot) %>% 
-  group_by(site, depth) %>% 
-  summarise_all(mean, na.omit = TRUE) %>% 
-  gather(variable, value, -site, -depth) %>% 
+read_tsv("outputs/soil.tsv") %>%
+  select(-lon, -lat, -plot) %>%
+  group_by(site, depth) %>%
+  summarise_all(mean, na.omit = TRUE) %>%
+  gather(variable, value, -site, -depth) %>%
   mutate(var_long = recode(variable,
-                           "bdod" = '"BD ["~kg~dm^{-3}~"]"',
-                           "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
-                           "cfvo" = '"CF ["~cm^3~"100"~cm^{-3}~"]"',
-                           "clay" = '"Clay ["~"%"~"]"',
-                           "nitrogen" = '"N ["~g~kg^{-1}~"]"',
-                           "ocd" = '"OCD ["~kg~dm^{3}~"]"',
-                           "ocs"  = '"OCS ["~kg~m^{-2}~"]"',
-                           "phh2o" = "pH",
-                           "sand" = '"Sand ["~"%"~"]"',
-                           "silt" = '"Silt ["~"%"~"]"',
-                           "soc" = '"SOC ["~g~kg^{-1}~"]"')
-         ) %>% 
+    "bdod" = '"BD ["~kg~dm^{-3}~"]"',
+    "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
+    "cfvo" = '"CF ["~cm^3~"100"~cm^{-3}~"]"',
+    "clay" = '"Clay ["~"%"~"]"',
+    "nitrogen" = '"N ["~g~kg^{-1}~"]"',
+    "ocd" = '"OCD ["~kg~dm^{3}~"]"',
+    "ocs" = '"OCS ["~kg~m^{-2}~"]"',
+    "phh2o" = "pH",
+    "sand" = '"Sand ["~"%"~"]"',
+    "silt" = '"Silt ["~"%"~"]"',
+    "soc" = '"SOC ["~g~kg^{-1}~"]"'
+  )) %>%
   ggplot(aes(site, value, fill = depth)) +
   geom_col(aes(group = as.factor(depth)), position = "dodge") +
-  facet_wrap(~ var_long, scales = "free_x", labeller = label_parsed) +
+  facet_wrap(~var_long, scales = "free_x", labeller = label_parsed) +
   theme_bw() +
-  theme(axis.title = element_blank(),
-        axis.text.y = element_text(size = 5)) +
+  theme(
+    axis.title = element_blank(),
+    axis.text.y = element_text(size = 5)
+  ) +
   scale_fill_viridis_c() +
   coord_flip()
 ```
@@ -87,32 +89,34 @@ read_tsv("outputs/soil.tsv") %>%
 #| message: false
 #| warning: false
 #| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
-read_tsv("outputs/soil.tsv") %>% 
-  select(-lon, -lat, -plot) %>% 
-  group_by(site, depth) %>% 
-  summarise_all(mean, na.omit = TRUE) %>% 
-  filter(depth == 5) %>% 
-  gather(variable, value, -site, -depth) %>% 
-  na.omit() %>% 
+read_tsv("outputs/soil.tsv") %>%
+  select(-lon, -lat, -plot) %>%
+  group_by(site, depth) %>%
+  summarise_all(mean, na.omit = TRUE) %>%
+  filter(depth == 5) %>%
+  gather(variable, value, -site, -depth) %>%
+  na.omit() %>%
   mutate(var_long = recode(variable,
-                           "bdod" = '"BD ["~kg~dm^{-3}~"]"',
-                           "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
-                           "cfvo" = '"CF ["~cm^3~"100"~cm^{-3}~"]"',
-                           "clay" = '"Clay ["~"%"~"]"',
-                           "nitrogen" = '"N ["~g~kg^{-1}~"]"',
-                           "ocd" = '"OCD ["~kg~dm^{3}~"]"',
-                           "ocs"  = '"OCS ["~kg~m^{-2}~"]"',
-                           "phh2o" = "pH",
-                           "sand" = '"Sand ["~"%"~"]"',
-                           "silt" = '"Silt ["~"%"~"]"',
-                           "soc" = '"SOC ["~g~kg^{-1}~"]"')
-         ) %>% 
+    "bdod" = '"BD ["~kg~dm^{-3}~"]"',
+    "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
+    "cfvo" = '"CF ["~cm^3~"100"~cm^{-3}~"]"',
+    "clay" = '"Clay ["~"%"~"]"',
+    "nitrogen" = '"N ["~g~kg^{-1}~"]"',
+    "ocd" = '"OCD ["~kg~dm^{3}~"]"',
+    "ocs" = '"OCS ["~kg~m^{-2}~"]"',
+    "phh2o" = "pH",
+    "sand" = '"Sand ["~"%"~"]"',
+    "silt" = '"Silt ["~"%"~"]"',
+    "soc" = '"SOC ["~g~kg^{-1}~"]"'
+  )) %>%
   ggplot(aes(site, value, fill = site)) +
   geom_col(aes(group = as.factor(depth)), position = "dodge") +
-  facet_wrap(~ var_long, scales = "free_y", labeller = label_parsed) +
+  facet_wrap(~var_long, scales = "free_y", labeller = label_parsed) +
   theme_bw() +
-  theme(legend.position = "bottom", axis.title = element_blank(),
-        axis.text.x = element_blank()) +
+  theme(
+    legend.position = "bottom", axis.title = element_blank(),
+    axis.text.x = element_blank()
+  ) +
   scale_fill_discrete("")
 ```
 
@@ -120,7 +124,7 @@ read_tsv("outputs/soil.tsv") %>%
 #| message: false
 #| warning: false
 #| fig-cap: "Soil texture for all sites, plots and depths."
-read_tsv("outputs/soil.tsv") %>% 
+read_tsv("outputs/soil.tsv") %>%
   ggplot(aes(x = sand, y = clay, z = silt, col = site)) +
   ggtern::coord_tern(L = "x", T = "y", R = "z") +
   geom_point() +
@@ -131,7 +135,7 @@ read_tsv("outputs/soil.tsv") %>%
     xarrow = "Sand [ % ]"
   ) +
   ggtern::theme_showarrows() +
-  ggtern::theme_hidetitles()+
+  ggtern::theme_hidetitles() +
   ggtern::theme_clockwise() +
   scale_color_discrete("") +
   theme(legend.position = "bottom")
@@ -142,14 +146,16 @@ read_tsv("outputs/soil.tsv") %>%
 #| warning: false
 #| fig-cap: "Soil variables PCA per site and plot."
 library(ggfortify)
-data <- read_tsv("outputs/soil.tsv") %>% 
-  filter(depth == 5) %>% 
-  select(-ocs) %>% 
+data <- read_tsv("outputs/soil.tsv") %>%
+  filter(depth == 5) %>%
+  select(-ocs) %>%
   na.omit()
 pca <- prcomp(data %>% select(-site, -plot, -lat, -lon, -depth), scale. = TRUE)
-autoplot(pca, loadings = TRUE, loadings.label = TRUE,
-         loadings.label.repel = TRUE,
-         data = data, colour = 'site') +
+autoplot(pca,
+  loadings = TRUE, loadings.label = TRUE,
+  loadings.label.repel = TRUE,
+  data = data, colour = "site"
+) +
   theme_bw() +
   coord_equal() +
   scale_color_discrete("")

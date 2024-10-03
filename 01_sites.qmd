@@ -15,29 +15,36 @@ First we had to prepare WGS84 - World Geodetic System 1984 coordinates from WGS 
 
 ```{r projs}
 #| eval: false
-sites %>% 
-  mutate(plot = as.character(plot)) %>% 
-  unnest(plot) %>% 
-  filter(site == "Iwokrama") %>% 
-  select(plot, 
-         `Location (WGS UTM 21N) SW corners...5`, 
-         `Location (WGS UTM 21N) SW corners...6`) %>% 
-  rename(lat = `Location (WGS UTM 21N) SW corners...5`, 
-         lon = `Location (WGS UTM 21N) SW corners...6`) %>% 
-  sf::st_as_sf(coords = c("lat", "lon"), crs = "EPSG:32621") %>% 
-  sf::st_transform(4326) %>% 
-  sf::st_coordinates() %>% 
-  as_data_frame() %>% 
+sites %>%
+  mutate(plot = as.character(plot)) %>%
+  unnest(plot) %>%
+  filter(site == "Iwokrama") %>%
+  select(
+    plot,
+    `Location (WGS UTM 21N) SW corners...5`,
+    `Location (WGS UTM 21N) SW corners...6`
+  ) %>%
+  rename(
+    lat = `Location (WGS UTM 21N) SW corners...5`,
+    lon = `Location (WGS UTM 21N) SW corners...6`
+  ) %>%
+  sf::st_as_sf(coords = c("lat", "lon"), crs = "EPSG:32621") %>%
+  sf::st_transform(4326) %>%
+  sf::st_coordinates() %>%
+  as_data_frame() %>%
   write_tsv("test.tsv")
 ```
 
 ```{r sites}
 #| eval: false
-sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% 
-  mutate(plot = as.character(plot)) %>% 
-  unnest(plot) %>% 
+sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets
+                                   /d/
+                                   1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/
+                                   edit?gid=0#gid=0") %>%
+  mutate(plot = as.character(plot)) %>%
+  unnest(plot) %>%
   select(site, plot, latitude, longitude) %>%
-  na.omit() %>% 
+  na.omit() %>%
   write_tsv("outputs/sites.tsv")
 ```
 
@@ -45,28 +52,30 @@ sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2o
 #| message: false
 #| warning: false
 #| fig-cap: "Sites and plots locations."
-read_tsv("outputs/sites.tsv") %>% 
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% 
-  leaflet() %>% 
-  addTiles() %>% 
-  addMarkers(label = ~ paste(site, plot), labelOptions = labelOptions(noHide = F))
+read_tsv("outputs/sites.tsv") %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(label = ~ paste(site, plot),
+             labelOptions = labelOptions(noHide = FALSE))
 ```
 
 ```{r sitesarea}
 #| message: false
 #| warning: false
 #| fig-cap: "Number of sites and total plots surface."
-read_tsv("outputs/sites.tsv") %>% 
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>% 
-  group_by(site) %>% 
-  summarise(n = n()) %>% 
-  st_convex_hull() %>% 
-  mutate(area = as.numeric(set_units(st_area(.), "km^2"))) %>% 
-  st_drop_geometry() %>% 
+read_tsv("outputs/sites.tsv") %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  group_by(site) %>%
+  summarise(n = n()) %>%
+  st_convex_hull() %>%
+  mutate(area = as.numeric(set_units(st_area(.), "km^2"))) %>%
+  st_drop_geometry() %>%
   ggplot(aes(n, area)) +
   geom_point() +
   theme_bw() +
-  xlab("Number of plots") + ylab(expression(paste("Area [", km^2, "]"))) +
+  xlab("Number of plots") +
+  ylab(expression(paste("Area [", km^2, "]"))) +
   ggrepel::geom_text_repel(aes(label = site)) +
   scale_y_sqrt()
 ```

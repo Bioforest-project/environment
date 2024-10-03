@@ -11,3 +11,48 @@ We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [con
 We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [SoilGrids](https://soilgrids.org/). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
 
 We developed a [snakemake](https://snakemake.readthedocs.io/en/stable/) and [conda](https://anaconda.org/anaconda/conda) python workflow for automatic climate data gathering from global databases relying here on [TMF](https://forobs.jrc.ec.europa.eu/TMF). The code is available here: [https://github.com/Bioforest-project/](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri}[environment](https://github.com/Bioforest-project/environment/tree/main/data){.uri}[/tree/main/data](https://github.com/Bioforest-project/LoggingDiversity/tree/main/data){.uri} .
+
+## Installation
+
+This workflow is built on:
+
+-   Python ≥3.5
+-   [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge)
+-   Snakemake ≥5.24.1
+
+```         
+conda activate base
+mamba create -c conda-forge -c bioconda -n snakemake snakemake
+conda activate snakemake
+snakemake --help
+```
+
+Once installed simply clone the workflow:
+
+```         
+git clone git@github.com:Bioforest-project/environment.git
+cd DownClim
+snakemake -np 
+```
+
+## Conda
+
+```         
+mamba env create -f envs/bioforest-env.yml # init
+mamba env update -f envs/bioforest-env.yml --prune # update
+mamab activate bioforest-env
+```
+
+## Snakemake
+
+```         
+snakemake -np # dry run
+snakemake --dag | dot -Tsvg > dag/dag.svg # dag
+snakemake -j 1 --resources mem_mb=10000 # local run (test)
+```
+
+## Data
+
+-   TerraClimate
+-   SoilGrids
+-   TMF
