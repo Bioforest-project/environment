@@ -9,7 +9,13 @@ format:
     toc-depth: 2
 ---
 
-This folder will contains the results of the snakemake workflow used by analyses in the quarto document.
+This folder will contains the results of the snakemake workflow used by analyses in the quarto document. In particular:
+
+-   `benchmarks/` contains every task benchmarking
+-   `climate/` contains all climatic data for every plot
+-   `landscape/` contains all landscape data for every plot
+-   `logs/` contains every task logs
+-   `soil/` contains all soil data for every plot
 
 ```{r, comment=""}
 fs::dir_tree()

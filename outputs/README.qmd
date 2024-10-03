@@ -12,6 +12,7 @@ All outputs and intermediary files of the analyses:
 
 -   climate.tsv: climate data
 -   landscape.tsv: landscape data
+-   sites.tsv: sites data
 -   soil.tsv: soil data
 
 ```{r, comment=""}
