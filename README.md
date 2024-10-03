@@ -1,11 +1,8 @@
 # Environment
-Oct 1, 2024
-
-<div>
+Oct 3, 2024
 
 [![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-
-</div>
+[![lint](https://github.com/Bioforest-project/environment/workflows/lint/badge.svg)](https://github.com/Bioforest-project/environment/actions?query=workflow%3Alint)
 
 **environment** is a sub-project of the **BioForest** project aimed at
 gathering environmental variables (to list) for data preparation within
@@ -51,42 +48,3 @@ The whole group consist of participants to the [Bioforest
 project](https://www.fondationbiodiversite.fr/la-frb-en-action/programmes-et-projets/le-cesab/bioforest/).
 
 ![](https://www.fondationbiodiversite.fr/wp-content/uploads/2023/10/bioforest-ws1_web.jpeg)
-
-## Installation
-
-This workflow is built on:
-
-- Python ≥3.5
-- [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge)
-- Snakemake ≥5.24.1
-
-<!-- -->
-
-    conda activate base
-    mamba create -c conda-forge -c bioconda -n snakemake snakemake
-    conda activate snakemake
-    snakemake --help
-
-Once installed simply clone the workflow:
-
-    git clone git@github.com:Bioforest-project/environment.git
-    cd DownClim
-    snakemake -np 
-
-## Conda
-
-    mamba env create -f envs/bioforest-env.yml # init
-    mamba env update -f envs/bioforest-env.yml --prune # update
-    mamab activate bioforest-env
-
-## Snakemake
-
-    snakemake -np # dry run
-    snakemake --dag | dot -Tsvg > dag/dag.svg # dag
-    snakemake -j 1 --resources mem_mb=10000 # local run (test)
-
-## Data
-
-- TerraClimate
-- SoilGrids
-- TMF
