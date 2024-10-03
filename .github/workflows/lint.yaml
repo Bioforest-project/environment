@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, master]
 
-name: lint.yaml
+name: lint
 
 permissions: read-all
 
@@ -25,6 +25,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 2
           packages: |
             any::lintr
 
