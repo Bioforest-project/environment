@@ -1,0 +1,18 @@
+---
+title: "Conda environments"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+This folder will contains conda environments for the worklow. In particular:
+
+-   `bioforest-env.yml` : the single conda environment for the moment.
+
+```{r, comment=""}
+fs::dir_tree()
+```

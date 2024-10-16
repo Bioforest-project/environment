@@ -1,5 +1,5 @@
 ---
-title: "Results of the snakemake workflow"
+title: "All data"
 author: Sylvain Schmitt -
 date: today
 date-format: medium
@@ -9,13 +9,7 @@ format:
     toc-depth: 2
 ---
 
-This folder will contains the results of the snakemake workflow used by analyses in the quarto document. In particular:
-
--   `benchmarks/` contains every task benchmarking
--   `climate/` contains all climatic data for every plot
--   `landscape/` contains all landscape data for every plot
--   `logs/` contains every task logs
--   `soil/` contains all soil data for every plot
+This folder will contains the data for all analyses. For the moment this is mainly derived data as the analyses does not use raw data yet.
 
 ```{r, comment=""}
 fs::dir_tree()

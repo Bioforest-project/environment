@@ -88,7 +88,7 @@ For each site we can use the intermediary files to project forest loss through t
 #| message: false
 #| warning: false
 #| fig-cap: "Tapajós km 67 20E forest cover through time."
-read_tsv("data/landscape/Tapajós km 67_20E_landscape.tsv") %>%
+read_tsv("data/derived_data/landscape/Tapajós km 67_20E_landscape.tsv") %>%
   ggplot(aes(lon, lat, fill = as.factor(forest))) +
   geom_raster() +
   facet_wrap(~year) +

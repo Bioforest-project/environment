@@ -1,0 +1,16 @@
+---
+title: "Raw data"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+This folder will contains the raw data for all analyses. Nothing yet.
+
+```{r, comment=""}
+fs::dir_tree()
+```

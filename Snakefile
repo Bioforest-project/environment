@@ -6,22 +6,22 @@ sites['site_plot'] = sites['site'] + "_" + sites['plot']
 
 rule all:
    input:
-      expand("data/climate/{site}_climate.tsv",
+      expand("data/derived_data/climate/{site}_climate.tsv",
               site=sites.site_plot),
-      expand("data/soil/{site}_soil.tsv",
+      expand("data/derived_data/soil/{site}_soil.tsv",
               site=sites.site_plot),
-      expand("data/landscape/{site}_landscape.tsv",
+      expand("data/derived_data/landscape/{site}_landscape.tsv",
               site=sites.site_plot)
 
 rule get_climate:
     input:
         config["sites"]
     output:
-        "data/climate/{site}_climate.tsv"
+        "data/derived_data/climate/{site}_climate.tsv"
     log:
-        "data/logs/{site}_climate.log"
+        "data/derived_data/logs/{site}_climate.log"
     benchmark:
-        "data/benchmarks/{site}_climate.benchmark.txt"
+        "data/derived_data/benchmarks/{site}_climate.benchmark.txt"
     threads: 1
     resources:
         mem_mb=1000
@@ -36,11 +36,11 @@ rule get_soil:
     input:
         config["sites"]
     output:
-        "data/soil/{site}_soil.tsv"
+        "data/derived_data/soil/{site}_soil.tsv"
     log:
-        "data/logs/{site}_soil.log"
+        "data/derived_data/logs/{site}_soil.log"
     benchmark:
-        "data/benchmarks/{site}_soil.benchmark.txt"
+        "data/derived_data/benchmarks/{site}_soil.benchmark.txt"
     threads: 1
     resources:
         mem_mb=1000
@@ -55,11 +55,11 @@ rule get_landscape:
     input:
         config["sites"]
     output:
-        "data/landscape/{site}_landscape.tsv"
+        "data/derived_data/landscape/{site}_landscape.tsv"
     log:
-        "data/logs/{site}_landscape.log"
+        "data/derived_data/logs/{site}_landscape.log"
     benchmark:
-        "data/benchmarks/{site}_landscape.benchmark.txt"
+        "data/derived_data/benchmarks/{site}_landscape.benchmark.txt"
     threads: 1
     resources:
         mem_mb=1000

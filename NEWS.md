@@ -1,8 +1,9 @@
--   troll_eval 0.1.0.9008: all text, and Tené fixed
--   troll_eval 0.1.0.9007: readme & index update
--   troll_eval 0.1.0.9006: adding lintr CI
--   troll_eval 0.1.0.9005: all data all sites, needs to be described
--   troll_eval 0.1.0.9004: TerraClimate all sites
--   troll_eval 0.1.0.9003: Aldrich's sites fix
--   troll_eval 0.1.0.9002: sites map
--   troll_eval 0.1.0.9001: cleaned fork from LoggingDiversity
+-   environment 0.1.0.9009: structure update
+-   environment 0.1.0.9008: all text, and Tené fixed
+-   environment 0.1.0.9007: readme & index update
+-   environment 0.1.0.9006: adding lintr CI
+-   environment 0.1.0.9005: all data all sites, needs to be described
+-   environment 0.1.0.9004: TerraClimate all sites
+-   environment 0.1.0.9003: Aldrich's sites fix
+-   environment 0.1.0.9002: sites map
+-   environment 0.1.0.9001: cleaned fork from LoggingDiversity

@@ -1,5 +1,5 @@
 # Environment
-Oct 3, 2024
+Oct 16, 2024
 
 [![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![lint](https://github.com/Bioforest-project/environment/workflows/lint/badge.svg)](https://github.com/Bioforest-project/environment/actions?query=workflow%3Alint)
@@ -42,16 +42,18 @@ with R and associated environment defined with
   - Reproductive analyses in `files.qmd`
   - Resulting pages in `docs/`
   - Document structure definition in `_quarto.yml`
-- Data in `data/`
+- Data in `data/` with:
+  - All raw data in `raw_data/`
+  - All derived data in `derived_sata/`
 - Intermediary files in `outputs/`
+- Figures in `figures/`
 - R environment definition with
   [renv](https://rstudio.github.io/renv/articles/renv.html) in `renv/`
   and `renv/lock`
 - R files (`.Rbuildignore` , `.Rdata` , `.Rprofile` , `.Rhistory`)
 - Git and GitHub files (`.gitignore` , `.github/`)
-- Project documentation (`README.qmd` , `README.md` , `NEWS.md` )
-
-> Should we add a license?
+- Project documentation (`README.qmd` , `README.md` , `NEWS.md` ,
+  `LICENSE`)
 
 ## Contribution
 
@@ -59,7 +61,7 @@ You can contribute to the project by forking the repository on github
 and cloning the fork to your machine using several options, including
 GitHub desktop GUI. Further informations on contribution are detailed in
 the online document:
-<https://bioforest-project.github.io/environment/98_contributing.html>.
+<https://bioforest-project.github.io/data_preparation/98_contributing.html>.
 
 ## Help
 

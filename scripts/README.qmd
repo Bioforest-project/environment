@@ -1,0 +1,20 @@
+---
+title: "Worlfow scripts"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+This folder will contains scripts for the workflow. In particular:
+
+-   `get_climate.py` : the script to get climate data
+-   `get_landscape.py` : the script to get landscape data
+-   `get_soil.py` : the script to get soil data
+
+```{r, comment=""}
+fs::dir_tree()
+```

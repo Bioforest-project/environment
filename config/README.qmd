@@ -1,0 +1,19 @@
+---
+title: "Workflow configuration"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+This folder will contains the files for the workflow configuration. In particular:
+
+-   `config.yml` : the workflow configuration file
+-   `sites.tsv` : the list of sites to retrieve data from
+
+```{r, comment=""}
+fs::dir_tree()
+```

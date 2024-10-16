@@ -1,6 +1,4 @@
 *
 !.gitignore
-!config.yml
-!sites.tsv
 !README.md
 !README.qmd
