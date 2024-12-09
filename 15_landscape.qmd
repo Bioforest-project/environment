@@ -20,12 +20,13 @@ list.files("data/derived_data/landscape/", full.names = TRUE) %>%
   select(-`0`) %>%
   mutate(`1` = ifelse(is.na(`1`), 0, `1`)) %>%
   summarise(intact = `1` / n_tot * 100) %>%
+  mutate(intact = ifelse(site == "Misiones", NA, intact)) %>% 
   write_tsv("outputs/landscape.tsv")
 ```
 
 Most sites showed low deforestation level in the 90s but most of them showed deforestation increasing through time.
 
-> There are issues with locations of Lesong, Malinau, Missiones, Sungai Lalang, Tené, Ulu Muda, and Uppangala that doesn't fall on forest according to TMF.
+> There are no data for Missiones as it is considered not in TMF by JRC.
 
 ```{r allsites}
 #| message: false

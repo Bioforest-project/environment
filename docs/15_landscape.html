@@ -247,12 +247,13 @@ div.csl-indent {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">0</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">1</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">1</span><span class="st">`</span>), <span class="dv">0</span>, <span class="st">`</span><span class="at">1</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">intact =</span> <span class="st">`</span><span class="at">1</span><span class="st">`</span> <span class="sc">/</span> n_tot <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_tsv</span>(<span class="st">"outputs/landscape.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">intact =</span> <span class="fu">ifelse</span>(site <span class="sc">==</span> <span class="st">"Misiones"</span>, <span class="cn">NA</span>, intact)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_tsv</span>(<span class="st">"outputs/landscape.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Most sites showed low deforestation level in the 90s but most of them showed deforestation increasing through time.</p>
 <blockquote class="blockquote">
-<p>There are issues with locations of Lesong, Malinau, Missiones, Sungai Lalang, Tené, Ulu Muda, and Uppangala that doesn’t fall on forest according to TMF.</p>
+<p>There are no data for Missiones as it is considered not in TMF by JRC.</p>
 </blockquote>
 <div class="cell">
 <details>
