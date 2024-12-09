@@ -22,10 +22,10 @@ We retrieved all data from SoilGrids detailed below [@poggio2021], but the spati
 
 ```{r prep}
 #| eval: false
-list.files("data/soil/", full.names = TRUE) %>%
+list.files("data/derived_data/soil/", full.names = TRUE) %>%
   read_tsv() %>%
   select(-time) %>%
-  gather(variable, value, -site, -plot, -lon, -lat) %>%
+  gather(variable, value, -site, -plot, -X, -Y) %>%
   separate(variable, c("variable", "depth"), "_") %>%
   separate(depth, c("mindepth", "depth"), "-") %>%
   mutate(depth = as.numeric(gsub("cm", "", depth))) %>%
@@ -47,8 +47,6 @@ list.files("data/soil/", full.names = TRUE) %>%
   write_tsv("outputs/soil.tsv")
 ```
 
-> BAFOG and Paracou are lacking because too close to the sea.
-
 The plots showed low variation within site but wider variation among sites with for instance sandy soils from Iwokrama opposed to silt and clay soils from Montagne Tortue.
 
 ```{r allplot}
@@ -56,7 +54,7 @@ The plots showed low variation within site but wider variation among sites with 
 #| warning: false
 #| fig-cap: "Mean soil data per site and depth."
 read_tsv("outputs/soil.tsv") %>%
-  select(-lon, -lat, -plot) %>%
+  select(-X, -Y, -plot) %>%
   group_by(site, depth) %>%
   summarise_all(mean, na.omit = TRUE) %>%
   gather(variable, value, -site, -depth) %>%
@@ -90,7 +88,7 @@ read_tsv("outputs/soil.tsv") %>%
 #| warning: false
 #| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
 read_tsv("outputs/soil.tsv") %>%
-  select(-lon, -lat, -plot) %>%
+  select(-X, -Y, -plot) %>%
   group_by(site, depth) %>%
   summarise_all(mean, na.omit = TRUE) %>%
   filter(depth == 5) %>%
@@ -154,7 +152,7 @@ data <- read_tsv("outputs/soil.tsv") %>%
   filter(depth == 5) %>%
   select(-ocs) %>%
   na.omit()
-pca <- prcomp(data %>% select(-site, -plot, -lat, -lon, -depth), scale. = TRUE)
+pca <- prcomp(data %>% select(-site, -plot, -X, -Y, -depth), scale. = TRUE)
 autoplot(pca,
   loadings = TRUE, loadings.label = TRUE,
   loadings.label.repel = TRUE,
