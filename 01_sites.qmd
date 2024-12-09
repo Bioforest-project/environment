@@ -57,7 +57,7 @@ read_tsv("outputs/sites.tsv") %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
   leaflet() %>%
   addTiles() %>%
-  addProviderTiles("Esri.WorldImagery", group = "ESRI") %>% 
+  addProviderTiles("Esri.WorldImagery", group = "ESRI") %>%
   addMarkers(label = ~ paste(site, plot),
              labelOptions = labelOptions(noHide = FALSE))
 ```

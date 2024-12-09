@@ -10,7 +10,7 @@ For the moment we only used information on total forest cover area in a radius o
 
 ```{r prep}
 #| eval: false
-list.files("data/landscape/", full.names = TRUE) %>%
+list.files("data/derived_data/landscape/", full.names = TRUE) %>%
   read_tsv() %>%
   group_by(site, plot, year, forest) %>%
   summarise(n = n()) %>%
