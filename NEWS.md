@@ -1,3 +1,4 @@
+-   environment 0.1.0.9010: esri wolrd imagery in site map for manual inspection of landscape, #1
 -   environment 0.1.0.9009: structure update
 -   environment 0.1.0.9008: all text, and Tené fixed
 -   environment 0.1.0.9007: readme & index update
