@@ -12,6 +12,7 @@ book:
     - 13_climate.qmd
     - 14_soil.qmd
     - 15_landscape.qmd
+    - 16_metrics.qmd
   appendices:
     - 99_references.qmd
 

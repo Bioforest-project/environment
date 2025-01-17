@@ -1,0 +1,48 @@
+```{r setup}
+#| message: false
+#| include: false
+library(tidyverse)
+```
+
+# Metrics {.unnumbered}
+
+Quick code for plots metrics gathering based on previous chapters, to be improved.
+
+```{r prep}
+#| eval: false
+climate <- read_tsv("outputs/climate.tsv") %>%
+  group_by(site, plot) %>%
+  summarise(
+    et = sum(aet), cwd = sum(def), pdsi = max(pdsi), pet = sum(pet),
+    pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd = max(vpd)
+  ) %>%
+  ungroup()
+soil <- read_tsv("outputs/soil.tsv") %>%
+  filter(depth == 5) %>%
+  select(-X, -Y, -depth, -ocs)
+landscape <- read_tsv("outputs/landscape.tsv") %>%
+  group_by(site, plot) %>%
+  summarise(deforested = mean(100 - intact))
+climate %>%
+  left_join(soil) %>%
+  left_join(landscape) %>%
+  write_tsv("outputs/environment.tsv")
+```
+
+```{r pca}
+#| message: false
+#| warning: false
+#| fig-cap: "All variables PCA per site and plot."
+library(ggfortify)
+data <- read_tsv("outputs/environment.tsv") %>%
+  na.omit()
+pca <- prcomp(data %>% select(-site, -plot), scale. = TRUE)
+autoplot(pca,
+  loadings = TRUE, loadings.label = TRUE,
+  loadings.label.repel = TRUE,
+  data = data, colour = "site"
+) +
+  theme_bw() +
+  coord_equal() +
+  scale_color_discrete("")
+```
