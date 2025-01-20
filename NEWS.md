@@ -1,3 +1,4 @@
+-   environment 0.1.0.9015: Kibale
 -   environment 0.1.0.9014: quick and dirty plot metrics for modelling
 -   environment 0.1.0.9013: paracou and bafog soil fixed using bb, #1
 -   environment 0.1.0.9012: tmf misiones understood, #1

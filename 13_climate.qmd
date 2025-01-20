@@ -19,7 +19,7 @@ We retrieved all data from TerraClimate detailed below [@abatzoglou2018]. This c
 
 ```{r prepclim}
 #| eval: false
-list.files("data/climate/", full.names = TRUE) %>%
+list.files("data/derived_data/climate/", full.names = TRUE) %>%
   read_tsv() %>%
   group_by(site) %>%
   mutate(

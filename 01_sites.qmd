@@ -41,7 +41,8 @@ sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2o
   mutate(plot = as.character(plot)) %>%
   unnest(plot) %>%
   select(site, plot, latitude, longitude) %>%
-  na.omit() %>%
+  mutate(latitude = ifelse(site == "Kibale", 0.45, latitude)) %>%
+  mutate(longitude = ifelse(site == "Kibale", 30.25, longitude)) %>%
   write_tsv("outputs/sites.tsv")
 ```
 
