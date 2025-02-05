@@ -1,4 +1,4 @@
-```{r setup}
+```{r set}
 #| message: false
 #| include: false
 library(tidyverse)
@@ -6,7 +6,7 @@ library(tidyverse)
 
 # Landscape {.unnumbered}
 
-For the moment we only used information on total forest cover area in a radius of 1-km from TMF [@europeancommission.jointresearchcentre.2020]. But the radius could be changed and other finer landscape indices could be derived and finer classification from TMF data could be used. Additionally, in landscape metrics WS1 metadata file listed also distance to the nearest village or road which could be simply extracted from openstreetmaps using R ([osmdata](#%7C%20message:%20false%20#%7C%20warning:%20false%20#%7C%20fig-cap: "Tapajós km 67 20E forest cover through time.")).
+We used information on total forest cover area in a radius of 1-km from **TMF** [@europeancommission.jointresearchcentre.2020].
 
 ```{r prep}
 #| eval: false
@@ -21,18 +21,20 @@ list.files("data/derived_data/landscape/", full.names = TRUE) %>%
   mutate(`1` = ifelse(is.na(`1`), 0, `1`)) %>%
   summarise(intact = `1` / n_tot * 100) %>%
   mutate(intact = ifelse(site == "Misiones", NA, intact)) %>%
-  write_tsv("outputs/landscape.tsv")
+  mutate(intact = ifelse(site == "Kibale", NA, intact)) %>%
+  write_tsv("data/derived_data/landscape.tsv")
 ```
 
 Most sites showed low deforestation level in the 90s but most of them showed deforestation increasing through time.
 
-> There are no data for Missiones as it is considered not in TMF by JRC.
+> There are no data for Misiones as it is considered not in TMF by JRC and no data for Kibale because the coordinates are not precise enough.
 
 ```{r allsites}
 #| message: false
 #| warning: false
 #| fig-cap: "Forest cover through time."
-read_tsv("outputs/landscape.tsv") %>%
+read_tsv("data/derived_data/landscape.tsv") %>%
+  na.omit() %>%
   ggplot(aes(year, 100 - intact, col = site, group = paste(site, plot))) +
   geom_line() +
   theme_bw() +
@@ -49,7 +51,7 @@ Most sites showed less than 10% forest loss cover in 2022, but few sites such as
 #| message: false
 #| warning: false
 #| fig-cap: "2022 forest cover."
-read_tsv("outputs/landscape.tsv") %>%
+read_tsv("data/derived_data/landscape.tsv") %>%
   filter(year == 2022) %>%
   ggplot(aes(site, 100 - intact, fill = site, group = paste(site, plot))) +
   geom_col(position = "dodge") +
@@ -67,7 +69,7 @@ Almost all sites lost forest cover between 1990 and 2022 at the exception of few
 #| message: false
 #| warning: false
 #| fig-cap: "Forest cover change between 1990 and 2022."
-read_tsv("outputs/landscape.tsv") %>%
+read_tsv("data/derived_data/landscape.tsv") %>%
   filter(year %in% c(1990, 2022)) %>%
   arrange(site, plot, year) %>%
   group_by(site, plot) %>%
@@ -77,30 +79,8 @@ read_tsv("outputs/landscape.tsv") %>%
   geom_col(position = "dodge") +
   theme_bw() +
   xlab("") +
-  ylab("Forest surface change between 1990 and 
+  ylab("Forest surface change between 1990 and
        2022 in a radius of 1-km [ % ]") +
   scale_fill_discrete(" ") +
   coord_flip()
-```
-
-For each site we can use the intermediary files to project forest loss through time and derive finer landscape metrics if needed.
-
-```{r betterplot}
-#| message: false
-#| warning: false
-#| fig-cap: "Tapajós km 67 20E forest cover through time."
-read_tsv("data/derived_data/landscape/Tapajós km 67_20E_landscape.tsv") %>%
-  ggplot(aes(lon, lat, fill = as.factor(forest))) +
-  geom_raster() +
-  facet_wrap(~year) +
-  theme_bw() +
-  coord_equal() +
-  scale_fill_manual(guide = "none", values = c("black", "darkgreen")) +
-  theme(
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    panel.spacing = unit(0, "lines")
-  ) +
-  ggtitle("Tapajós km 67 20E forest landscape")
 ```

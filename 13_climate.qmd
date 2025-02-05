@@ -1,12 +1,13 @@
-```{r setup}
+```{r set}
 #| message: false
 #| include: false
 library(tidyverse)
+library(ggfortify)
 ```
 
 # Climate {.unnumbered}
 
-We retrieved all data from TerraClimate detailed below [@abatzoglou2018]. This could be compared to site data, but with issues regarding site data standardization, representativeness, and validation.
+We retrieved all data from **TerraClimate** [@abatzoglou2018]. The variables are extracted for each plot of each site and every month from 1958 to 2023. The raw variables are:
 
 -   ET: Actual evapotranspiration, mm
 -   CWD: Climate water deficit, mm
@@ -15,34 +16,63 @@ We retrieved all data from TerraClimate detailed below [@abatzoglou2018]. This c
 -   PDSI: Palmer Drought Severity Index
 -   PET: Potential evapotranpiration, mm
 -   Pr: precipitation, mm
+-   Soil: Soil humidity, mm
 -   VPD: Vapour Pressure Deficit, kPa
 
 ```{r prepclim}
 #| eval: false
-list.files("data/derived_data/climate/", full.names = TRUE) %>%
+all_dat <- list.files("data/derived_data/climate/", full.names = TRUE) %>%
   read_tsv() %>%
   group_by(site) %>%
   mutate(
     aet = aet * .1, def = def * .1, pdsi = pdsi * .01, pet = pet * .1,
-    tmmn = tmmn * .1, tmmx = tmmx * .1, vpd = vpd * .01
+    tmmn = tmmn * .1, tmmx = tmmx * .1, vpd = vpd * .01, soil = soil * .1
   ) %>%
-  write_tsv("outputs/climate.tsv")
+  mutate(month = month(time)) %>%
+  mutate(year = year(time))
+monthly <- all_dat %>%
+  select(plot, site, month, pr, tmmn, tmmx, soil) %>%
+  group_by(plot, site, month) %>%
+  summarise_all(mean)
+write_tsv(monthly, "data/derived_data/climate_month.tsv")
+ds <- all_dat %>%
+  filter(aet > pr) %>%
+  group_by(plot, site, year) %>%
+  summarise(dsl = n() * 30, dsi = sum(aet - pr)) %>%
+  select(-year) %>%
+  group_by(plot, site) %>%
+  summarise_all(mean)
+yearly <- all_dat %>%
+  group_by(plot, site, year) %>%
+  summarise(
+    et = sum(aet),
+    cwd = sum(def),
+    pr = sum(pr),
+    tmax = max(tmmx),
+    vpd = max(vpd),
+    soil = min(soil)
+  ) %>%
+  select(-year) %>%
+  group_by(plot, site) %>%
+  summarise_all(mean) %>%
+  left_join(ds)
+write_tsv(yearly, "data/derived_data/climate_year.tsv")
 ```
 
-For a quick exploration of each site climatology we first had a look to umbrothermal diagrams for the mean climate of each site, opposing for instance highly seasonal monsoon regimes from India un Uppangala to less seasonal regimes from Missiones in Argentina.
+For a quick exploration of each site climatology we first had a look to umbrothermal diagrams for the mean climate of each site, opposing for instance highly seasonal monsoon regimes from India un Uppangala to less seasonal regimes from Misiones in Argentina.
 
 ```{r umbrothermal}
 #| message: false
 #| warning: false
 #| fig-cap: "Umbrothermal diagrams for the mean climate of each site."
-read_tsv("outputs/climate.tsv") %>%
-  select(-lon, -lat) %>%
+read_tsv("data/derived_data/climate_month.tsv") %>%
+  filter(site != "Uppangala") %>%
   group_by(site, month) %>%
   summarise_all(mean) %>%
   ggplot(aes(x = month)) +
-  geom_col(aes(y = pr / 30), fill = "grey", col = NA) +
-  geom_line(aes(y = tmmn, col = "maximum")) +
-  geom_line(aes(y = tmmx, col = "minimum")) +
+  geom_col(aes(y = pr / 10, fill = pr < 100), col = NA) +
+  geom_line(aes(y = tmmn, col = "maximum"), linewidth = 1.1) +
+  geom_line(aes(y = tmmx, col = "minimum"), linewidth = 1.1) +
   theme_bw() +
   xlab("") +
   scale_x_continuous(
@@ -51,101 +81,87 @@ read_tsv("outputs/climate.tsv") %>%
   ) +
   scale_y_continuous(
     name = "Temperature (°C)",
-    sec.axis = sec_axis(trans = ~ . * 30, name = "Precipitation (mm)")
+    sec.axis = sec_axis(trans = ~ . * 10, name = "Precipitation (mm)")
   ) +
-  theme(
-    axis.title.y = element_text(color = "black"),
-    axis.title.y.right = element_text(color = "grey")
-  ) +
-  scale_color_discrete("") +
-  theme(legend.position = "bottom") +
-  facet_wrap(~site)
+  scale_color_discrete(guide = "none") +
+  facet_wrap(~site) +
+  scale_fill_manual(guide = "none", values = c("darkgrey", "lightgrey"))
 ```
 
-Looking more in depth to each variable per site, plot and month better showed the climatology for each variable with relative low variation within site but large variation among sites.
-
-```{r allvars}
+```{r umbrothermal_uppangala}
 #| message: false
 #| warning: false
-#| fig-cap: "Climate variables per site, plot and month."
-read_tsv("outputs/climate.tsv") %>%
-  gather(variable, value, -site, -month, -plot, -lat, -lon) %>%
-  mutate(var_long = recode(variable,
-    "aet" = "Actual evapotranspiration [ mm ]",
-    "def" = "Climate water deficit [ mm ]",
-    "pdsi" = "Palmer Drought Severity Index",
-    "pet" = "Potential evapotranspiration [ mm ]",
-    "pr" = "Precipitation [ mm ]",
-    "tmmn" = "Minimum temperature [ °C ]",
-    "tmmx" = "Maximum temperature [ °C ]",
-    "vpd" = "Vapor pressure deficit [ kPA ]"
-  )) %>%
-  ggplot(aes(month, value, col = site, group = paste(site, plot))) +
-  geom_line() +
-  facet_wrap(~var_long, scales = "free_y") +
+#| fig-cap: "Umbrothermal diagrams for the mean climate of each site."
+read_tsv("data/derived_data/climate_month.tsv") %>%
+  filter(site == "Uppangala") %>%
+  group_by(site, month) %>%
+  summarise_all(mean) %>%
+  ggplot(aes(x = month)) +
+  geom_col(aes(y = pr / 10, fill = pr < 100), col = NA) +
+  geom_line(aes(y = tmmn, col = "maximum"), linewidth = 1.1) +
+  geom_line(aes(y = tmmx, col = "minimum"), linewidth = 1.1) +
+  theme_bw() +
   xlab("") +
-  ylab("") +
   scale_x_continuous(
     breaks = 1:12,
     labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")
   ) +
-  theme_bw() +
-  theme(legend.position = "bottom") +
-  scale_color_discrete("")
+  scale_y_continuous(
+    name = "Temperature (°C)",
+    sec.axis = sec_axis(trans = ~ . * 10, name = "Precipitation (mm)")
+  ) +
+  scale_color_discrete(guide = "none") +
+  facet_wrap(~site) +
+  scale_fill_manual(guide = "none", values = c("darkgrey", "lightgrey"))
 ```
 
-To ease plot and sites comparisons, we derived yearly metrics of sum (evapotranspiration, climatic water deficit, precipitation), minimum (minimum temperature), or maximum (palmer drought index, maximum temperature, vapour pressure deficit) depending on the variables. This better revealed among sites differences with for instance highest CWD at Uppangala despite highest total precipitation.
+To ease plot and sites comparisons, we derived yearly metrics:
 
-> Other indices could be derived such as widely used bioclimatic variables.
+-   CWD: Climate water deficit, mm, mean across years of the sum of monthly CWD
+-   ET: Evapotranspiration, mm, mean across years of the sum of monthly ET
+-   Pr: Precipitation, mm, mean across years of the sum of monthly Pr
+-   Soil: Soil humidity, mm, mean across years of the minimum of monthly soil humidity
+-   VPD: Vapour Pressure Deficit, kPa, mean across years of the maximum of monthly VPD
+-   Tmax: Maximum temperature, °C, mean across years of the maximum of monthly Tmax
+-   DSL: Dry season length, days, mean across years of the number of month with ET\>Pr multiplied by 30
+-   DSI: Dry season intensity, mm, mean across years of the sum of ET-Pr for month with ET\>Pr
+
+This better revealed among sites differences with for instance highest dry season intensity and length at Uppangala despite highest total precipitation.
 
 ```{r metrics}
 #| message: false
 #| warning: false
 #| fig-cap: "Yearly mean climate variables per site."
-read_tsv("outputs/climate.tsv") %>%
-  group_by(site, plot) %>%
-  summarise(
-    aet = sum(aet), def = sum(def), pdsi = max(pdsi), pet = sum(pet),
-    pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd_max = max(vpd)
-  ) %>%
+read_tsv("data/derived_data/climate_year.tsv") %>%
   gather(variable, value, -site, -plot) %>%
   mutate(var_long = recode(variable,
-    "aet" = "Evapotranspiration [ mm ]",
-    "def" = "Climate water deficit [ mm ]",
-    "pdsi" = "Palmer Drought Severity Index",
-    "pdsi_max" = "Max PDSI",
-    "pdsi_mean" = "Mean PDSI",
-    "pet" = "Pot evapotranspiration [ mm ]",
+    "et" = "Evapotranspiration [ mm ]",
+    "cwd" = "Climate water deficit [ mm ]",
     "pr" = "Precipitation [ mm ]",
-    "tmin" = "Min temperature [ °C ]",
     "tmax" = "Max temperature [ °C ]",
-    "vpd_max" = "Max VPD [ kPA ]"
+    "vpd" = "Max VPD [ kPA ]",
+    "soil" = "Min soil humidity [ mm ]",
+    "dsi" = "Dry season intensity [ mm ]",
+    "dsl" = "Dry season length [ day ]"
   )) %>%
   ggplot(aes(site, value, fill = site, group = paste(site, plot))) +
   geom_col(position = "dodge") +
-  facet_wrap(~var_long, scales = "free_x") +
+  facet_wrap(~var_long, scales = "free_y") +
   theme_bw() +
-  coord_flip() +
-  theme(legend.position = "none", axis.title = element_blank(),
-        axis.text.y = element_text(size = 6))
+  theme(
+    legend.position = "bottom", axis.title = element_blank(),
+    axis.text.x = element_blank()
+  ) +
+  scale_fill_discrete("")
 ```
 
-The first ordination axis retained almost half of the variations of the 8 climate variables.
-
-> This is a very quick interpretation of the figure and should be explored more in depth.
+The first ordination axis retained almost half of the variations.
 
 ```{r pca}
 #| message: false
 #| warning: false
 #| fig-cap: "Yearly mean climate variables PCA per site and plot."
-library(ggfortify)
-data <- read_tsv("outputs/climate.tsv") %>%
-  group_by(site, plot) %>%
-  summarise(
-    et = sum(aet), cwd = sum(def), pdsi = max(pdsi), pet = sum(pet),
-    pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd = max(vpd)
-  ) %>%
-  ungroup()
+data <- read_tsv("data/derived_data/climate_year.tsv")
 pca <- prcomp(data %>% select(-site, -plot), scale. = TRUE)
 autoplot(pca,
   loadings = TRUE, loadings.label = TRUE,
@@ -156,3 +172,15 @@ autoplot(pca,
   coord_equal() +
   scale_color_discrete("")
 ```
+
+```{r corr}
+#| message: false
+#| warning: false
+#| fig-cap: "Climate variables pairwise correlations."
+read_tsv("data/derived_data/climate_year.tsv") %>%
+  select(-site, -plot) %>%
+  cor(use = "pairwise.complete.obs") %>%
+  corrplot::corrplot(type = "upper", diag = FALSE)
+```
+
+We will extract all for modelling but group 2 is focusing on climate stress which I think could be well represented by DSL, DSI, Soil and/or Tmax.

@@ -239,7 +239,7 @@ div.csl-indent {
 
 </header>
 
-<p>We retrieved all data from SoilGrids detailed below <span class="citation" data-cites="poggio2021">(<a href="99_references.html#ref-poggio2021" role="doc-biblioref">Poggio et al. 2021</a>)</span>, but the spatial extrapolation and reference points have some issues as for instance in French Guiana. This could be compared to site data, but with issues regarding site data standardization, representativeness, and validation.</p>
+<p>We retrieved all data from <strong>SoilGrids</strong> detailed below <span class="citation" data-cites="poggio2021">(<a href="99_references.html#ref-poggio2021" role="doc-biblioref">Poggio et al. 2021</a>)</span>:</p>
 <ul>
 <li>Clay: Proportion of clay particles (&lt; 0.002 mm) in the fine earth fraction, %</li>
 <li>Sand: Proportion of sand particles (&gt; 0.05 mm) in the fine earth fraction, %</li>
@@ -278,55 +278,51 @@ div.csl-indent {
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">ocd =</span> ocd <span class="sc">/</span> <span class="dv">10</span>,</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">ocs =</span> ocs <span class="sc">/</span> <span class="dv">10</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_tsv</span>(<span class="st">"outputs/soil.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_tsv</span>(<span class="st">"data/derived_data/soil.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The plots showed low variation within site but wider variation among sites with for instance sandy soils from Iwokrama opposed to silt and clay soils from Montagne Tortue.</p>
+<p>We have information per depth in each plot as shown below, but we will focus here on the top horizon (up to 5cm).</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"outputs/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>X, <span class="sc">-</span>Y, <span class="sc">-</span>plot) <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, depth) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(mean, <span class="at">na.omit =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(variable, value, <span class="sc">-</span>site, <span class="sc">-</span>depth) <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_long =</span> <span class="fu">recode</span>(variable,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bdod"</span> <span class="ot">=</span> <span class="st">'"BD ["~kg~dm^{-3}~"]"'</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cec"</span> <span class="ot">=</span> <span class="st">'"CEC ["~cmol~kg^{-1}~"]"'</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cfvo"</span> <span class="ot">=</span> <span class="st">'"CF ["~cm^3~"100"~cm^{-3}~"]"'</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"clay"</span> <span class="ot">=</span> <span class="st">'"Clay ["~"%"~"]"'</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nitrogen"</span> <span class="ot">=</span> <span class="st">'"N ["~g~kg^{-1}~"]"'</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ocd"</span> <span class="ot">=</span> <span class="st">'"OCD ["~kg~dm^{3}~"]"'</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ocs"</span> <span class="ot">=</span> <span class="st">'"OCS ["~kg~m^{-2}~"]"'</span>,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"phh2o"</span> <span class="ot">=</span> <span class="st">"pH"</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sand"</span> <span class="ot">=</span> <span class="st">'"Sand ["~"%"~"]"'</span>,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"silt"</span> <span class="ot">=</span> <span class="st">'"Silt ["~"%"~"]"'</span>,</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"soc"</span> <span class="ot">=</span> <span class="st">'"SOC ["~g~kg^{-1}~"]"'</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(site, value, <span class="at">fill =</span> depth)) <span class="sc">+</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="fu">as.factor</span>(depth)), <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>var_long, <span class="at">scales =</span> <span class="st">"free_x"</span>, <span class="at">labeller =</span> label_parsed) <span class="sc">+</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>)</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"data/derived_data/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(site <span class="sc">==</span> <span class="st">"Paracou"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>X, <span class="sc">-</span>Y, <span class="sc">-</span>site, <span class="sc">-</span>ocs) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(variable, value, <span class="sc">-</span>plot, <span class="sc">-</span>depth) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_long =</span> <span class="fu">recode</span>(variable,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bdod"</span> <span class="ot">=</span> <span class="st">'"BD ["~kg~dm^{-3}~"]"'</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cec"</span> <span class="ot">=</span> <span class="st">'"CEC ["~cmol~kg^{-1}~"]"'</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cfvo"</span> <span class="ot">=</span> <span class="st">'"CF ["~cm^3~"100"~cm^{-3}~"]"'</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"clay"</span> <span class="ot">=</span> <span class="st">'"Clay ["~"%"~"]"'</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nitrogen"</span> <span class="ot">=</span> <span class="st">'"N ["~g~kg^{-1}~"]"'</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ocd"</span> <span class="ot">=</span> <span class="st">'"OCD ["~kg~dm^{3}~"]"'</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"phh2o"</span> <span class="ot">=</span> <span class="st">"pH"</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sand"</span> <span class="ot">=</span> <span class="st">'"Sand ["~"%"~"]"'</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"silt"</span> <span class="ot">=</span> <span class="st">'"Silt ["~"%"~"]"'</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"soc"</span> <span class="ot">=</span> <span class="st">'"SOC ["~g~kg^{-1}~"]"'</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(depth, value, <span class="at">group =</span> <span class="fu">as.character</span>(plot))) <span class="sc">+</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> var_long, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">labeller =</span> label_parsed) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Depth [ m ]"</span>) <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Paracou"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="14_soil_files/figure-html/allplot-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Mean soil data per site and depth.</figcaption>
+<p><img src="14_soil_files/figure-html/par_soil-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Soil data variation with depth at Paracou across plots.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<p>The plots showed low variation within site but wider variation among sites.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"outputs/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"data/derived_data/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>X, <span class="sc">-</span>Y, <span class="sc">-</span>plot) <span class="sc">%&gt;%</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, depth) <span class="sc">%&gt;%</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(mean, <span class="at">na.omit =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
@@ -368,7 +364,7 @@ div.csl-indent {
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"outputs/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"data/derived_data/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sand, <span class="at">y =</span> clay, <span class="at">z =</span> silt, <span class="at">col =</span> site)) <span class="sc">+</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  ggtern<span class="sc">::</span><span class="fu">coord_tern</span>(<span class="at">L =</span> <span class="st">"x"</span>, <span class="at">T =</span> <span class="st">"y"</span>, <span class="at">R =</span> <span class="st">"z"</span>) <span class="sc">+</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
@@ -394,14 +390,11 @@ div.csl-indent {
 </div>
 </div>
 <p>The first ordination axis retained almost half of the variations of the 10 soil variables and opposed sandy poor soils to more fertile silty soils.</p>
-<blockquote class="blockquote">
-<p>This is a very quick interpretation of the figure and should be explored more in depth.</p>
-</blockquote>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"outputs/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"data/derived_data/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(depth <span class="sc">==</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ocs) <span class="sc">%&gt;%</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
@@ -424,6 +417,25 @@ div.csl-indent {
 </div>
 </div>
 </div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"data/derived_data/soil.tsv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(depth <span class="sc">==</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>site, <span class="sc">-</span>plot, <span class="sc">-</span>X, <span class="sc">-</span>Y, <span class="sc">-</span>depth, <span class="sc">-</span>ocs) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  corrplot<span class="sc">::</span><span class="fu">corrplot</span>(<span class="at">type =</span> <span class="st">"upper"</span>, <span class="at">diag =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="14_soil_files/figure-html/corr-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Soil variables pairwise correlations.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We will extract all for modelling but group 2 is focusing on bulk density (bdod) and soil organic carbon (soc) to represent soil fertility.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">

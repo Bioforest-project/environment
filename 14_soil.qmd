@@ -6,7 +6,7 @@ library(tidyverse)
 
 # Soil {.unnumbered}
 
-We retrieved all data from SoilGrids detailed below [@poggio2021], but the spatial extrapolation and reference points have some issues as for instance in French Guiana. This could be compared to site data, but with issues regarding site data standardization, representativeness, and validation.
+We retrieved all data from **SoilGrids** detailed below [@poggio2021]:
 
 -   Clay: Proportion of clay particles (\< 0.002 mm) in the fine earth fraction, %
 -   Sand: Proportion of sand particles (\> 0.05 mm) in the fine earth fraction, %
@@ -44,20 +44,19 @@ list.files("data/derived_data/soil/", full.names = TRUE) %>%
     ocd = ocd / 10,
     ocs = ocs / 10
   ) %>%
-  write_tsv("outputs/soil.tsv")
+  write_tsv("data/derived_data/soil.tsv")
 ```
 
-The plots showed low variation within site but wider variation among sites with for instance sandy soils from Iwokrama opposed to silt and clay soils from Montagne Tortue.
+We have information per depth in each plot as shown below, but we will focus here on the top horizon (up to 5cm).
 
-```{r allplot}
+```{r par_soil}
 #| message: false
 #| warning: false
-#| fig-cap: "Mean soil data per site and depth."
-read_tsv("outputs/soil.tsv") %>%
-  select(-X, -Y, -plot) %>%
-  group_by(site, depth) %>%
-  summarise_all(mean, na.omit = TRUE) %>%
-  gather(variable, value, -site, -depth) %>%
+#| fig-cap: "Soil data variation with depth at Paracou across plots."
+read_tsv("data/derived_data/soil.tsv") %>%
+  filter(site == "Paracou") %>%
+  select(-X, -Y, -site, -ocs) %>%
+  gather(variable, value, -plot, -depth) %>%
   mutate(var_long = recode(variable,
     "bdod" = '"BD ["~kg~dm^{-3}~"]"',
     "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
@@ -65,29 +64,28 @@ read_tsv("outputs/soil.tsv") %>%
     "clay" = '"Clay ["~"%"~"]"',
     "nitrogen" = '"N ["~g~kg^{-1}~"]"',
     "ocd" = '"OCD ["~kg~dm^{3}~"]"',
-    "ocs" = '"OCS ["~kg~m^{-2}~"]"',
     "phh2o" = "pH",
     "sand" = '"Sand ["~"%"~"]"',
     "silt" = '"Silt ["~"%"~"]"',
     "soc" = '"SOC ["~g~kg^{-1}~"]"'
   )) %>%
-  ggplot(aes(site, value, fill = depth)) +
-  geom_col(aes(group = as.factor(depth)), position = "dodge") +
-  facet_wrap(~var_long, scales = "free_x", labeller = label_parsed) +
+  ggplot(aes(depth, value, group = as.character(plot))) +
+  geom_line() +
+  facet_wrap(~var_long, scales = "free_y", labeller = label_parsed) +
   theme_bw() +
-  theme(
-    axis.title = element_blank(),
-    axis.text.y = element_text(size = 5)
-  ) +
-  scale_fill_viridis_c() +
-  coord_flip()
+  ylab("") +
+  xlab("Depth [ m ]") +
+  scale_x_log10() +
+  ggtitle("Paracou")
 ```
+
+The plots showed low variation within site but wider variation among sites.
 
 ```{r allplot5}
 #| message: false
 #| warning: false
 #| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
-read_tsv("outputs/soil.tsv") %>%
+read_tsv("data/derived_data/soil.tsv") %>%
   select(-X, -Y, -plot) %>%
   group_by(site, depth) %>%
   summarise_all(mean, na.omit = TRUE) %>%
@@ -122,7 +120,7 @@ read_tsv("outputs/soil.tsv") %>%
 #| message: false
 #| warning: false
 #| fig-cap: "Soil texture for all sites, plots and depths."
-read_tsv("outputs/soil.tsv") %>%
+read_tsv("data/derived_data/soil.tsv") %>%
   ggplot(aes(x = sand, y = clay, z = silt, col = site)) +
   ggtern::coord_tern(L = "x", T = "y", R = "z") +
   geom_point() +
@@ -141,14 +139,12 @@ read_tsv("outputs/soil.tsv") %>%
 
 The first ordination axis retained almost half of the variations of the 10 soil variables and opposed sandy poor soils to more fertile silty soils.
 
-> This is a very quick interpretation of the figure and should be explored more in depth.
-
 ```{r pca}
 #| message: false
 #| warning: false
 #| fig-cap: "Soil variables PCA per site and plot."
 library(ggfortify)
-data <- read_tsv("outputs/soil.tsv") %>%
+data <- read_tsv("data/derived_data/soil.tsv") %>%
   filter(depth == 5) %>%
   select(-ocs) %>%
   na.omit()
@@ -162,3 +158,16 @@ autoplot(pca,
   coord_equal() +
   scale_color_discrete("")
 ```
+
+```{r corr}
+#| message: false
+#| warning: false
+#| fig-cap: "Soil variables pairwise correlations."
+read_tsv("data/derived_data/soil.tsv") %>%
+  filter(depth == 5) %>%
+  select(-site, -plot, -X, -Y, -depth, -ocs) %>%
+  cor(use = "pairwise.complete.obs") %>%
+  corrplot::corrplot(type = "upper", diag = FALSE)
+```
+
+We will extract all for modelling but group 2 is focusing on bulk density (bdod) and soil organic carbon (soc) to represent soil fertility.

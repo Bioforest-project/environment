@@ -11,8 +11,6 @@ library(units)
 
 This page describes all sites and plots coordinates preparation and visualization.
 
-First we had to prepare WGS84 - World Geodetic System 1984 coordinates from WGS 84 UTM zone 21N for Iwokrama.
-
 ```{r projs}
 #| eval: false
 sites %>%
@@ -37,30 +35,30 @@ sites %>%
 
 ```{r sites}
 #| eval: false
-sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% #nolint
+sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% # nolint
   mutate(plot = as.character(plot)) %>%
   unnest(plot) %>%
   select(site, plot, latitude, longitude) %>%
   mutate(latitude = ifelse(site == "Kibale", 0.45, latitude)) %>%
   mutate(longitude = ifelse(site == "Kibale", 30.25, longitude)) %>%
-  write_tsv("outputs/sites.tsv")
+  write_tsv("data/derived_data/sites.tsv")
 ```
 
 We obtained the following sites and plots distribution globally.
-
-> Other sites location might unprecised and should be checked against forest landscape data.
 
 ```{r sitesmap}
 #| message: false
 #| warning: false
 #| fig-cap: "Sites and plots locations."
-read_tsv("outputs/sites.tsv") %>%
+read_tsv("data/derived_data/sites.tsv") %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
   leaflet() %>%
   addTiles() %>%
   addProviderTiles("Esri.WorldImagery", group = "ESRI") %>%
-  addMarkers(label = ~ paste(site, plot),
-             labelOptions = labelOptions(noHide = FALSE))
+  addMarkers(
+    label = ~ paste(site, plot),
+    labelOptions = labelOptions(noHide = FALSE)
+  )
 ```
 
 Most sites showed a small dispersion of plots covering up 10 km^2^ at the exception of BAFOG & Sao Nicolau covering tenth of km^2^ and Iwokrama covering more than 150 km^2^ .
@@ -69,7 +67,7 @@ Most sites showed a small dispersion of plots covering up 10 km^2^ at the except
 #| message: false
 #| warning: false
 #| fig-cap: "Number of sites and total plots surface."
-read_tsv("outputs/sites.tsv") %>%
+read_tsv("data/derived_data/sites.tsv") %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
   group_by(site) %>%
   summarise(n = n()) %>%

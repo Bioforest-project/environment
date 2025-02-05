@@ -1,42 +1,65 @@
-```{r setup}
+```{r set}
 #| message: false
 #| include: false
 library(tidyverse)
+library(ggfortify)
 ```
 
 # Metrics {.unnumbered}
 
-Quick code for plots metrics gathering based on previous chapters, to be improved.
+Metrics gathering for modelling steps of the project:
+
+-   CWD: Climate water deficit, mm
+-   ET: Evapotranspiration, mm
+-   Pr: Precipitation, mm
+-   Soil: Soil humidity, mm
+-   VPD: Vapour Pressure Deficit, kPa
+-   Tmax: Maximum temperature, °C
+-   DSL: Dry season length, daysmultiplied by 30
+-   DSI: Dry season intensity, mm
+-   Clay: Proportion of clay, %
+-   Sand: Proportion of sand, %
+-   Silt: Proportion of silt, %
+-   BDOD: Bulk density, kg dm³
+-   CEC: Cation Exchange Capacity, cmolC kg^-1^
+-   CF: Coarse Fragments , cm^3^ 100cm^-3^
+-   N: Soil nitrogen, g kg^-1^
+-   pH: Soil pH
+-   SOC: Soil organic carbon content, g kg^-1^
+-   OCD: Organic carbon density, kg dm³
+-   Deforested: Deforested area in a radius of 1-km, %
 
 ```{r prep}
 #| eval: false
-climate <- read_tsv("outputs/climate.tsv") %>%
-  group_by(site, plot) %>%
-  summarise(
-    et = sum(aet), cwd = sum(def), pdsi = max(pdsi), pet = sum(pet),
-    pr = sum(pr), tmax = max(tmmx), tmin = min(tmmn), vpd = max(vpd)
-  ) %>%
-  ungroup()
-soil <- read_tsv("outputs/soil.tsv") %>%
+sites <- read_tsv("data/derived_data/sites.tsv")
+climate <- read_tsv("data/derived_data/climate_year.tsv")
+soil <- read_tsv("data/derived_data/soil.tsv") %>%
   filter(depth == 5) %>%
   select(-X, -Y, -depth, -ocs)
-landscape <- read_tsv("outputs/landscape.tsv") %>%
+landscape <- read_tsv("data/derived_data/landscape.tsv") %>%
   group_by(site, plot) %>%
   summarise(deforested = mean(100 - intact))
 climate %>%
   left_join(soil) %>%
   left_join(landscape) %>%
   write_tsv("outputs/environment.tsv")
+sites %>%
+  left_join(climate) %>%
+  left_join(soil) %>%
+  left_join(landscape) %>%
+  write_tsv("outputs/environment.tsv")
 ```
+
+We have correlation among group of variables, notably among climate and soil, which is logical but should be taken into account. For instance SOC is highly anti-correlated to DSL and DSI.
 
 ```{r pca}
 #| message: false
 #| warning: false
 #| fig-cap: "All variables PCA per site and plot."
-library(ggfortify)
 data <- read_tsv("outputs/environment.tsv") %>%
   na.omit()
-pca <- prcomp(data %>% select(-site, -plot), scale. = TRUE)
+pca <- prcomp(data %>% select(-site, -plot, -longitude, -latitude),
+              scale. = TRUE)
 autoplot(pca,
   loadings = TRUE, loadings.label = TRUE,
   loadings.label.repel = TRUE,
@@ -45,4 +68,14 @@ autoplot(pca,
   theme_bw() +
   coord_equal() +
   scale_color_discrete("")
+```
+
+```{r corr}
+#| message: false
+#| warning: false
+#| fig-cap: "All variables pairwise correlations."
+read_tsv("outputs/environment.tsv") %>%
+  select(-site, -plot, -longitude, -latitude) %>%
+  cor(use = "pairwise.complete.obs") %>%
+  corrplot::corrplot(type = "upper", diag = FALSE)
 ```
