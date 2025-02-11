@@ -34,8 +34,10 @@ Metrics gathering for modelling steps of the project:
 sites <- read_tsv("data/derived_data/sites.tsv")
 climate <- read_tsv("data/derived_data/climate_year.tsv")
 soil <- read_tsv("data/derived_data/soil.tsv") %>%
-  filter(depth == 5) %>%
-  select(-X, -Y, -depth, -ocs)
+  group_by(site) %>%
+  filter(depth <= 15) %>%
+  summarise_all(mean, na.omit = TRUE) %>%
+  select(-X, -Y, -depth, -ocs, -plot)
 landscape <- read_tsv("data/derived_data/landscape.tsv") %>%
   group_by(site, plot) %>%
   summarise(deforested = mean(100 - intact))

@@ -47,7 +47,7 @@ list.files("data/derived_data/soil/", full.names = TRUE) %>%
   write_tsv("data/derived_data/soil.tsv")
 ```
 
-We have information per depth in each plot as shown below, but we will focus here on the top horizon (up to 5cm).
+We have information per depth in each plot as shown below, I focused on the **two top horizons (0-15cm)** revealing most inter-site variations (V. Freycon pers. com.).
 
 ```{r par_soil}
 #| message: false
@@ -87,9 +87,9 @@ The plots showed low variation within site but wider variation among sites.
 #| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
 read_tsv("data/derived_data/soil.tsv") %>%
   select(-X, -Y, -plot) %>%
-  group_by(site, depth) %>%
+  group_by(site) %>%
+  filter(depth <= 15) %>%
   summarise_all(mean, na.omit = TRUE) %>%
-  filter(depth == 5) %>%
   gather(variable, value, -site, -depth) %>%
   na.omit() %>%
   mutate(var_long = recode(variable,
@@ -145,10 +145,13 @@ The first ordination axis retained almost half of the variations of the 10 soil 
 #| fig-cap: "Soil variables PCA per site and plot."
 library(ggfortify)
 data <- read_tsv("data/derived_data/soil.tsv") %>%
-  filter(depth == 5) %>%
+  select(-X, -Y, -plot) %>%
+  group_by(site) %>%
+  filter(depth <= 15) %>%
+  summarise_all(mean, na.omit = TRUE) %>%
   select(-ocs) %>%
   na.omit()
-pca <- prcomp(data %>% select(-site, -plot, -X, -Y, -depth), scale. = TRUE)
+pca <- prcomp(data %>% select(-site, -depth), scale. = TRUE)
 autoplot(pca,
   loadings = TRUE, loadings.label = TRUE,
   loadings.label.repel = TRUE,
@@ -164,10 +167,15 @@ autoplot(pca,
 #| warning: false
 #| fig-cap: "Soil variables pairwise correlations."
 read_tsv("data/derived_data/soil.tsv") %>%
-  filter(depth == 5) %>%
-  select(-site, -plot, -X, -Y, -depth, -ocs) %>%
+  select(-X, -Y, -plot) %>%
+  group_by(site) %>%
+  filter(depth <= 15) %>%
+  summarise_all(mean, na.omit = TRUE) %>%
+  select(-ocs) %>%
+  na.omit() %>%
+  select(-site, -depth) %>%
   cor(use = "pairwise.complete.obs") %>%
   corrplot::corrplot(type = "upper", diag = FALSE)
 ```
 
-We will extract all for modelling but group 2 is focusing on bulk density (bdod) and soil organic carbon (soc) to represent soil fertility.
+We will extract all for modelling but group 2 is focused on soil fertility with bulk density (bdod) and soil organic carbon (soc). Note that V. Freycon recommend using cay which is very linked to soil fertility in undistrubed tropical forests as well as to water properties.
