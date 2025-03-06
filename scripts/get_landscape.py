@@ -23,7 +23,7 @@ import numpy as np
 sites = pd.read_table(sites_tab)
 sites['site_plot'] = sites['site'] + "_" + sites['plot']
 sites = sites[sites["site_plot"]==site]
-ee.Initialize(opt_url='https://earthengine-highvolume.googleapis.com')
+ee.Initialize(project="ee-sylvainmschmitt", opt_url='https://earthengine-highvolume.googleapis.com')
 
 leg = ee.Geometry.Rectangle(sites["longitude"].values[0]-radius, sites["latitude"].values[0]-radius, 
                             sites["longitude"].values[0]+radius, sites["latitude"].values[0]+radius)

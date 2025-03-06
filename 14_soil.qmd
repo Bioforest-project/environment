@@ -1,4 +1,4 @@
-```{r setup}
+```{r set}
 #| message: false
 #| include: false
 library(tidyverse)
@@ -111,7 +111,8 @@ read_tsv("data/derived_data/soil.tsv") %>%
   theme_bw() +
   theme(
     legend.position = "bottom", axis.title = element_blank(),
-    axis.text.x = element_blank()
+    axis.text.x = element_blank(),
+    legend.key.size = unit(0.5, "line")
   ) +
   scale_fill_discrete("")
 ```
@@ -134,7 +135,7 @@ read_tsv("data/derived_data/soil.tsv") %>%
   ggtern::theme_hidetitles() +
   ggtern::theme_clockwise() +
   scale_color_discrete("") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", legend.key.size = unit(0.5, "line"))
 ```
 
 The first ordination axis retained almost half of the variations of the 10 soil variables and opposed sandy poor soils to more fertile silty soils.
@@ -159,7 +160,8 @@ autoplot(pca,
 ) +
   theme_bw() +
   coord_equal() +
-  scale_color_discrete("")
+  scale_color_discrete("") +
+  theme(legend.key.size = unit(0.5, "line"))
 ```
 
 ```{r corr}

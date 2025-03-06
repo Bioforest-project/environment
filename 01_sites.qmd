@@ -35,12 +35,18 @@ sites %>%
 
 ```{r sites}
 #| eval: false
+site_names <- read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?usp=sharing", 2) %>% #nolint
+  separate_rows(site_raw, sep = ",")
 sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% # nolint
   mutate(plot = as.character(plot)) %>%
   unnest(plot) %>%
   select(site, plot, latitude, longitude) %>%
   mutate(latitude = ifelse(site == "Kibale", 0.45, latitude)) %>%
   mutate(longitude = ifelse(site == "Kibale", 30.25, longitude)) %>%
+  rename(site_raw = site) %>%
+  left_join(site_names) %>%
+  select(site, plot, latitude, longitude) %>%
+  na.omit() %>%
   write_tsv("data/derived_data/sites.tsv")
 ```
 
@@ -79,6 +85,7 @@ read_tsv("data/derived_data/sites.tsv") %>%
   theme_bw() +
   xlab("Number of plots") +
   ylab(expression(paste("Area [", km^2, "]"))) +
-  ggrepel::geom_text_repel(aes(label = site)) +
-  scale_y_sqrt()
+  ggrepel::geom_text_repel(aes(label = site), size = 2) +
+  scale_y_sqrt() +
+  scale_x_log10()
 ```

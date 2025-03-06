@@ -69,7 +69,8 @@ autoplot(pca,
 ) +
   theme_bw() +
   coord_equal() +
-  scale_color_discrete("")
+  scale_color_discrete("") +
+  theme(legend.key.size = unit(0.5, "line"))
 ```
 
 ```{r corr}

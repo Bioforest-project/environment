@@ -1,2 +1,3 @@
-sites: "config/sites.tsv"
+sites: "data/derived_data/sites.tsv"
 landscape_radius: 0.009 # 1-km
+

@@ -66,7 +66,7 @@ For a quick exploration of each site climatology we first had a look to umbrothe
 #| warning: false
 #| fig-cap: "Umbrothermal diagrams for the mean climate of each site."
 read_tsv("data/derived_data/climate_month.tsv") %>%
-  filter(site != "Uppangala") %>%
+  filter(!(site %in% c("Uppangala", "Nelliyampathy"))) %>%
   group_by(site, month) %>%
   summarise_all(mean) %>%
   ggplot(aes(x = month)) +
@@ -93,7 +93,7 @@ read_tsv("data/derived_data/climate_month.tsv") %>%
 #| warning: false
 #| fig-cap: "Umbrothermal diagrams for the mean climate of each site."
 read_tsv("data/derived_data/climate_month.tsv") %>%
-  filter(site == "Uppangala") %>%
+  filter(site %in% c("Uppangala", "Nelliyampathy")) %>%
   group_by(site, month) %>%
   summarise_all(mean) %>%
   ggplot(aes(x = month)) +
@@ -150,7 +150,8 @@ read_tsv("data/derived_data/climate_year.tsv") %>%
   theme_bw() +
   theme(
     legend.position = "bottom", axis.title = element_blank(),
-    axis.text.x = element_blank()
+    axis.text.x = element_blank(),
+    legend.key.size = unit(0.5, "line")
   ) +
   scale_fill_discrete("")
 ```
@@ -170,7 +171,8 @@ autoplot(pca,
 ) +
   theme_bw() +
   coord_equal() +
-  scale_color_discrete("")
+  scale_color_discrete("") +
+  theme(legend.key.size = unit(0.5, "line"))
 ```
 
 ```{r corr}

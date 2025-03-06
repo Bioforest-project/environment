@@ -60,7 +60,8 @@ read_tsv("data/derived_data/landscape.tsv") %>%
   ylab("Deforested area in 2022 in a radius of 1-km [ % ]") +
   scale_fill_discrete(" ") +
   coord_flip() +
-  scale_y_sqrt()
+  scale_y_sqrt() +
+  theme(legend.key.size = unit(0.5, "line"))
 ```
 
 Almost all sites lost forest cover between 1990 and 2022 at the exception of few plots in Sao Nicolau that gained almost 20% of cover.
@@ -82,5 +83,6 @@ read_tsv("data/derived_data/landscape.tsv") %>%
   ylab("Forest surface change between 1990 and
        2022 in a radius of 1-km [ % ]") +
   scale_fill_discrete(" ") +
-  coord_flip()
+  coord_flip() +
+  theme(legend.key.size = unit(0.5, "line"))
 ```
