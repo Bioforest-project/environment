@@ -31,7 +31,8 @@ Metrics gathering for modelling steps of the project:
 ```{r prep}
 #| eval: false
 sites <- read_tsv("data/derived_data/sites.tsv") %>%
-  select(-plot)
+  select(-plot, -latitude, -longitude) %>%
+  unique()
 climate <- read_tsv("data/derived_data/climate_year.tsv")
 soil <- read_tsv("data/derived_data/soil.tsv") %>%
   group_by(site) %>%
