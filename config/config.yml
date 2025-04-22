@@ -1,3 +1,8 @@
-sites: "data/derived_data/sites.tsv"
-landscape_radius: 0.009 # 1-km
-
+sites: ["Antimary APU2", "Antimary APU3", "BAFOG", "Corinto", "Ecosilva",
+"Embrapa Acre", "Gola", "Iracema", "Iwokrama", "Jari", "Jenaro Herrera",
+"Kabo", "Kibale", "Lesong", "Malinau", "Manare", "Mbaiki", "Mil", "Misiones",
+"Moju", "Montagne Tortue", "Nelliyampathy", "PAD Limoeiro Tabocal",
+"Pad Limo 2 Barracos", "Pad Limo Chico Bocao", "Pad Limo Cumaru",
+"Pad Limo Jatoba", "Pad Limo Pocao", "Pad Limo STCP", "Paracou", "Peixoto",
+"Peteco", "STREK", "Sao Nicolau", "Ser Filipinas", "Sungai Lalang",
+"Tapajos Km114", "Tapajos Km67", "Tene", "Tirimbina", "Ulu Muda", "Uppangala"]

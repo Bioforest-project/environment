@@ -35,7 +35,8 @@ sites %>%
 
 ```{r sites}
 #| eval: false
-site_names <- read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?usp=sharing", 2) %>% #nolint
+library(googlesheets4)
+site_names <- read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?usp=sharing", 2) %>% # nolint
   separate_rows(site_raw, sep = ",")
 sites <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1fq2owxMBLBwwibcdw2uQQFxnIhsMbaH4Qcj_xUwVvSQ/edit?gid=0#gid=0") %>% # nolint
   mutate(plot = as.character(plot)) %>%
@@ -88,4 +89,30 @@ read_tsv("data/derived_data/sites.tsv") %>%
   ggrepel::geom_text_repel(aes(label = site), size = 2) +
   scale_y_sqrt() +
   scale_x_log10()
+```
+
+```{r prep_sites}
+#| eval: false
+sites <- read_tsv("data/derived_data/sites.tsv") %>%
+  group_by(site) %>%
+  select(-plot) %>%
+  summarise_all(mean)
+if (!file.exists("data/derived_data/site")) {
+  dir.create("data/derived_data/site")
+}
+for (s in sites$site) {
+  file <- file.path(
+    "data/derived_data/site",
+    paste0(s, ".tsv")
+  )
+  if (!file.exists(file)) {
+    print(paste0("Writting ", s))
+    sites %>%
+      filter(site == s) %>%
+      write_tsv(file)
+  } else {
+    print(paste0("Skipping ", s, ", file already exists."))
+  }
+}
+paste0("sites: [", paste0('"', sites$site, '"', collapse = ", "), "]") %>% cat()
 ```

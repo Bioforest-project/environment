@@ -25,7 +25,7 @@ We retrieved all data from **SoilGrids** detailed below [@poggio2021]:
 list.files("data/derived_data/soil/", full.names = TRUE) %>%
   read_tsv() %>%
   select(-time) %>%
-  gather(variable, value, -site, -plot, -X, -Y) %>%
+  gather(variable, value, -site, -X, -Y) %>%
   separate(variable, c("variable", "depth"), "_") %>%
   separate(depth, c("mindepth", "depth"), "-") %>%
   mutate(depth = as.numeric(gsub("cm", "", depth))) %>%
@@ -54,9 +54,8 @@ We have information per depth in each plot as shown below, I focused on the **tw
 #| warning: false
 #| fig-cap: "Soil data variation with depth at Paracou across plots."
 read_tsv("data/derived_data/soil.tsv") %>%
-  filter(site == "Paracou") %>%
-  select(-X, -Y, -site, -ocs) %>%
-  gather(variable, value, -plot, -depth) %>%
+  select(-X, -Y, -ocs) %>%
+  gather(variable, value, -depth, -site) %>%
   mutate(var_long = recode(variable,
     "bdod" = '"BD ["~kg~dm^{-3}~"]"',
     "cec" = '"CEC ["~cmol~kg^{-1}~"]"',
@@ -69,14 +68,13 @@ read_tsv("data/derived_data/soil.tsv") %>%
     "silt" = '"Silt ["~"%"~"]"',
     "soc" = '"SOC ["~g~kg^{-1}~"]"'
   )) %>%
-  ggplot(aes(depth, value, group = as.character(plot))) +
+  ggplot(aes(depth, value, colour = site)) +
   geom_line() +
   facet_wrap(~var_long, scales = "free_y", labeller = label_parsed) +
   theme_bw() +
   ylab("") +
   xlab("Depth [ m ]") +
-  scale_x_log10() +
-  ggtitle("Paracou")
+  scale_color_discrete(guide = "none")
 ```
 
 The plots showed low variation within site but wider variation among sites.
@@ -86,7 +84,7 @@ The plots showed low variation within site but wider variation among sites.
 #| warning: false
 #| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
 read_tsv("data/derived_data/soil.tsv") %>%
-  select(-X, -Y, -plot) %>%
+  select(-X, -Y) %>%
   group_by(site) %>%
   filter(depth <= 15) %>%
   summarise_all(mean, na.omit = TRUE) %>%
@@ -146,7 +144,7 @@ The first ordination axis retained almost half of the variations of the 10 soil 
 #| fig-cap: "Soil variables PCA per site and plot."
 library(ggfortify)
 data <- read_tsv("data/derived_data/soil.tsv") %>%
-  select(-X, -Y, -plot) %>%
+  select(-X, -Y) %>%
   group_by(site) %>%
   filter(depth <= 15) %>%
   summarise_all(mean, na.omit = TRUE) %>%
@@ -169,7 +167,7 @@ autoplot(pca,
 #| warning: false
 #| fig-cap: "Soil variables pairwise correlations."
 read_tsv("data/derived_data/soil.tsv") %>%
-  select(-X, -Y, -plot) %>%
+  select(-X, -Y) %>%
   group_by(site) %>%
   filter(depth <= 15) %>%
   summarise_all(mean, na.omit = TRUE) %>%

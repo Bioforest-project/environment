@@ -31,19 +31,19 @@ all_dat <- list.files("data/derived_data/climate/", full.names = TRUE) %>%
   mutate(month = month(time)) %>%
   mutate(year = year(time))
 monthly <- all_dat %>%
-  select(plot, site, month, pr, tmmn, tmmx, soil) %>%
-  group_by(plot, site, month) %>%
+  select(site, month, pr, tmmn, tmmx, soil) %>%
+  group_by(site, month) %>%
   summarise_all(mean)
 write_tsv(monthly, "data/derived_data/climate_month.tsv")
 ds <- all_dat %>%
   filter(aet > pr) %>%
-  group_by(plot, site, year) %>%
+  group_by(site, year) %>%
   summarise(dsl = n() * 30, dsi = sum(aet - pr)) %>%
   select(-year) %>%
-  group_by(plot, site) %>%
+  group_by(site) %>%
   summarise_all(mean)
 yearly <- all_dat %>%
-  group_by(plot, site, year) %>%
+  group_by(site, year) %>%
   summarise(
     et = sum(aet),
     cwd = sum(def),
@@ -53,7 +53,7 @@ yearly <- all_dat %>%
     soil = min(soil)
   ) %>%
   select(-year) %>%
-  group_by(plot, site) %>%
+  group_by(site) %>%
   summarise_all(mean) %>%
   left_join(ds)
 write_tsv(yearly, "data/derived_data/climate_year.tsv")
@@ -133,7 +133,7 @@ This better revealed among sites differences with for instance highest dry seaso
 #| warning: false
 #| fig-cap: "Yearly mean climate variables per site."
 read_tsv("data/derived_data/climate_year.tsv") %>%
-  gather(variable, value, -site, -plot) %>%
+  gather(variable, value, -site) %>%
   mutate(var_long = recode(variable,
     "et" = "Evapotranspiration [ mm ]",
     "cwd" = "Climate water deficit [ mm ]",
@@ -144,7 +144,7 @@ read_tsv("data/derived_data/climate_year.tsv") %>%
     "dsi" = "Dry season intensity [ mm ]",
     "dsl" = "Dry season length [ day ]"
   )) %>%
-  ggplot(aes(site, value, fill = site, group = paste(site, plot))) +
+  ggplot(aes(site, value, fill = site, group = site)) +
   geom_col(position = "dodge") +
   facet_wrap(~var_long, scales = "free_y") +
   theme_bw() +
@@ -163,7 +163,7 @@ The first ordination axis retained almost half of the variations.
 #| warning: false
 #| fig-cap: "Yearly mean climate variables PCA per site and plot."
 data <- read_tsv("data/derived_data/climate_year.tsv")
-pca <- prcomp(data %>% select(-site, -plot), scale. = TRUE)
+pca <- prcomp(data %>% select(-site), scale. = TRUE)
 autoplot(pca,
   loadings = TRUE, loadings.label = TRUE,
   loadings.label.repel = TRUE,
@@ -180,7 +180,7 @@ autoplot(pca,
 #| warning: false
 #| fig-cap: "Climate variables pairwise correlations."
 read_tsv("data/derived_data/climate_year.tsv") %>%
-  select(-site, -plot) %>%
+  select(-site) %>%
   cor(use = "pairwise.complete.obs") %>%
   corrplot::corrplot(type = "upper", diag = FALSE)
 ```

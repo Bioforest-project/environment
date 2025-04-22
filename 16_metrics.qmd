@@ -27,28 +27,20 @@ Metrics gathering for modelling steps of the project:
 -   pH: Soil pH
 -   SOC: Soil organic carbon content, g kg^-1^
 -   OCD: Organic carbon density, kg dm³
--   Deforested: Deforested area in a radius of 1-km, %
 
 ```{r prep}
 #| eval: false
-sites <- read_tsv("data/derived_data/sites.tsv")
+sites <- read_tsv("data/derived_data/sites.tsv") %>%
+  select(-plot)
 climate <- read_tsv("data/derived_data/climate_year.tsv")
 soil <- read_tsv("data/derived_data/soil.tsv") %>%
   group_by(site) %>%
   filter(depth <= 15) %>%
   summarise_all(mean, na.omit = TRUE) %>%
-  select(-X, -Y, -depth, -ocs, -plot)
-landscape <- read_tsv("data/derived_data/landscape.tsv") %>%
-  group_by(site, plot) %>%
-  summarise(deforested = mean(100 - intact))
-climate %>%
-  left_join(soil) %>%
-  left_join(landscape) %>%
-  write_tsv("outputs/environment.tsv")
+  select(-X, -Y, -depth, -ocs)
 sites %>%
   left_join(climate) %>%
   left_join(soil) %>%
-  left_join(landscape) %>%
   write_tsv("outputs/environment.tsv")
 ```
 
@@ -60,8 +52,9 @@ We have correlation among group of variables, notably among climate and soil, wh
 #| fig-cap: "All variables PCA per site and plot."
 data <- read_tsv("outputs/environment.tsv") %>%
   na.omit()
-pca <- prcomp(data %>% select(-site, -plot, -longitude, -latitude),
-              scale. = TRUE)
+pca <- prcomp(data %>% select(-site, -longitude, -latitude),
+  scale. = TRUE
+)
 autoplot(pca,
   loadings = TRUE, loadings.label = TRUE,
   loadings.label.repel = TRUE,
@@ -78,7 +71,7 @@ autoplot(pca,
 #| warning: false
 #| fig-cap: "All variables pairwise correlations."
 read_tsv("outputs/environment.tsv") %>%
-  select(-site, -plot, -longitude, -latitude) %>%
+  select(-site, -longitude, -latitude) %>%
   cor(use = "pairwise.complete.obs") %>%
   corrplot::corrplot(type = "upper", diag = FALSE)
 ```
