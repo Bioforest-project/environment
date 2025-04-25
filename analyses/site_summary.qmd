@@ -176,7 +176,7 @@ We retrieved all data from **SoilGrids** detailed below [@poggio2021]:
 -   **SOC**: Soil organic carbon content in the fine earth fraction, g kg^-1^
 -   **OCD**: Organic carbon density, kg dm³
 
-We have information per depth in each plot as shown below:
+We have information per depth as shown below:
 
 ```{r par_soil}
 #| message: false
@@ -290,5 +290,9 @@ read_tsv("../data/derived_data/soil.tsv") %>%
   ggtern::theme_clockwise() +
   scale_color_viridis_c("Depth [ m ]")
 ```
+
+## Links
+
+All analyses can be found at <https://bioforest-project.github.io/environment/> with corresponding code at <https://github.com/Bioforest-project/environment>. Specifically, the code to generate this document is available at : <https://github.com/Bioforest-project/environment/blob/main/analyses/site_summary.qmd>.
 
 ## References
