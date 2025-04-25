@@ -1,4 +1,5 @@
-sites <- "Misiones" #nolint
+sites <- "Misiones"
+sites <- unique(readr::read_tsv("data/derived_data/sites.tsv")$site)
 for (site in sites) {
   print(site)
   file_name <- paste0(site, "_environment.pdf")

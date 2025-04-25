@@ -1,7 +1,5 @@
 ---
-params:
-  site: "Misiones"
-title: "{{< meta params.site >}} environment"
+title: "Site environment"
 author: "Schmitt, S."
 date: last-modified
 format:
@@ -12,6 +10,8 @@ format:
     fig-pos: H
 execute:
   echo: false
+params:
+  site: "Misiones"
 bibliography: ../references.bib
 ---
 

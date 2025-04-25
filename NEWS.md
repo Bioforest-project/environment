@@ -1,3 +1,4 @@
+-   environment 0.1.0.9021: running automatic report for all sites
 -   environment 0.1.0.9020: automatic report v0
 -   environment 0.1.0.9019: Sites v3 42 with simplified plot level workflow without landscape
 -   environment 0.1.0.9018: Sites v2 (37)
