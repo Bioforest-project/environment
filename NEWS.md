@@ -1,3 +1,4 @@
+-   environment 0.1.0.9020: automatic report v0
 -   environment 0.1.0.9019: Sites v3 42 with simplified plot level workflow without landscape
 -   environment 0.1.0.9018: Sites v2 (37)
 -   environment 0.1.0.9017: Soil up to 15 cm
