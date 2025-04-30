@@ -83,7 +83,7 @@ We retrieved all available data from TerraClimate [@abatzoglou2018] of every mon
 ```{r umbrothermal}
 #| message: false
 #| warning: false
-#| fig-cap: "Umbrothermal diagram for the mean climate of the site. Vertical grey bars represents mean monthly precipitation in mm with lightgrey bars representing dry season with less than 100 mm and dark grey bars the rainy season. Lines represents maximal in red and minimal in blue monthly temperature in °C." #nolint
+#| fig-cap: "Umbrothermal diagram for the mean climate of the site. Vertical grey bars represents mean monthly precipitation in mm with lightgrey bars representing dry season with less than 100 mm and dark grey bars the rainy season. Lines represents average maximal in red and average minimal in blue monthly temperature in °C." #nolint
 read_tsv("../data/derived_data/climate_month.tsv") %>%
   filter(site == params$site) %>%
   group_by(site, month) %>%
@@ -203,77 +203,17 @@ read_tsv("../data/derived_data/soil.tsv") %>%
   facet_wrap(~var_long, scales = "free_y", labeller = label_parsed) +
   theme_bw() +
   ylab("") +
-  xlab("Depth [ m ]") +
+  xlab("Depth [ cm ]") +
   scale_color_discrete(guide = "none") +
   theme(strip.text = element_text(size = 7))
 ```
 
-We summarised the **two top horizons (0-15cm)** revealing most inter-site variations (V. Freycon pers. com.):
-
-```{r allplot5}
-#| message: false
-#| warning: false
-#| fig-cap: "Mean soil data per site for top horizon (up to 5cm)."
-read_tsv("../data/derived_data/soil.tsv") %>%
-  filter(site == params$site) %>%
-  select(-X, -Y, -site) %>%
-  filter(depth <= 15) %>%
-  select(-depth) %>%
-  summarise_all(mean, na.omit = TRUE) %>%
-  gather(variable, value) %>%
-  mutate(acronym = recode(variable,
-    "bdod" = "BD",
-    "cec" = "CEC",
-    "cfvo" = "CF",
-    "clay" = "Clay",
-    "nitrogen" = "N",
-    "ocd" = "OCD",
-    "ocs" = "OCS",
-    "phh2o" = "pH",
-    "sand" = "Sand",
-    "silt" = "Silt",
-    "soc" = "SOC"
-  )) %>%
-  mutate(unit = recode(variable,
-    "bdod" = "$kg~dm^{-3}$",
-    "cec" = "$cmol~kg^{-1}$",
-    "cfvo" = "$cm^3~100~cm^{-3}$",
-    "clay" = "%",
-    "nitrogen" = "$g~kg^{-1}$",
-    "ocd" = "$kg~dm^{3}$",
-    "ocs" = "$kg~m^{-2}$",
-    "phh2o" = "",
-    "sand" = "%",
-    "silt" = "%",
-    "soc" = "$g~kg^{-1}$"
-  )) %>%
-  mutate(variable = recode(variable,
-    "bdod" = "Bulk density of the fine earth fraction",
-    "cec" = "Cation Exchange Capacity of the soil",
-    "cfvo" = "Volumetric fraction of coarse fragments",
-    "clay" = "Proportion of clay particles",
-    "nitrogen" = "Total nitrogen",
-    "ocd" = "Organic carbon density",
-    "ocs" = "Organic carbon stocks",
-    "phh2o" = "Soil pH",
-    "sand" = "Proportion of sand particles",
-    "silt" = "Proportion of silt particles",
-    "soc" = "Soil organic carbon content in the fine earth fraction"
-  )) %>%
-  select(acronym, variable, value, unit) %>%
-  arrange(acronym) %>%
-  kable(
-    caption = "Mean soil data of the site for top horizon (up to 15cm).",
-    digits = 2
-  )
-```
-
-This can be represented as a soil texture plot:
+This can be plotted as a soil texture graph:
 
 ```{r betterplot}
 #| message: false
 #| warning: false
-#| fig-cap: "Soil texture for all depths."
+#| fig-cap: "Soil texture for all available depths."
 read_tsv("../data/derived_data/soil.tsv") %>%
   filter(site == params$site) %>%
   ggplot(aes(x = sand, y = clay, z = silt, col = depth)) +
@@ -288,7 +228,63 @@ read_tsv("../data/derived_data/soil.tsv") %>%
   ggtern::theme_showarrows() +
   ggtern::theme_hidetitles() +
   ggtern::theme_clockwise() +
-  scale_color_viridis_c("Depth [ m ]")
+  scale_color_viridis_c("Depth [ cm ]")
+```
+
+We summarised the **two top horizons (0-15cm)** revealing most inter-site variations (V. Freycon pers. com.):
+
+```{r allplot5}
+#| message: false
+#| warning: false
+read_tsv("../data/derived_data/soil.tsv") %>%
+  filter(site == params$site) %>%
+  select(-X, -Y, -site, -ocs) %>%
+  filter(depth <= 15) %>%
+  select(-depth) %>%
+  summarise_all(mean, na.omit = TRUE) %>%
+  gather(variable, value) %>%
+  mutate(acronym = recode(variable,
+    "bdod" = "BD",
+    "cec" = "CEC",
+    "cfvo" = "CF",
+    "clay" = "Clay",
+    "nitrogen" = "N",
+    "ocd" = "OCD",
+    "phh2o" = "pH",
+    "sand" = "Sand",
+    "silt" = "Silt",
+    "soc" = "SOC"
+  )) %>%
+  mutate(unit = recode(variable,
+    "bdod" = "$kg~dm^{-3}$",
+    "cec" = "$cmol~kg^{-1}$",
+    "cfvo" = "$cm^3~100~cm^{-3}$",
+    "clay" = "%",
+    "nitrogen" = "$g~kg^{-1}$",
+    "ocd" = "$kg~dm^{3}$",
+    "phh2o" = "",
+    "sand" = "%",
+    "silt" = "%",
+    "soc" = "$g~kg^{-1}$"
+  )) %>%
+  mutate(variable = recode(variable,
+    "bdod" = "Bulk density of the fine earth fraction",
+    "cec" = "Cation Exchange Capacity of the soil",
+    "cfvo" = "Volumetric fraction of coarse fragments",
+    "clay" = "Proportion of clay particles",
+    "nitrogen" = "Total nitrogen",
+    "ocd" = "Organic carbon density",
+    "phh2o" = "Soil pH",
+    "sand" = "Proportion of sand particles",
+    "silt" = "Proportion of silt particles",
+    "soc" = "Soil organic carbon content in the fine earth fraction"
+  )) %>%
+  select(acronym, variable, value, unit) %>%
+  arrange(acronym) %>%
+  kable(
+    caption = "Mean soil data per site for the two upper horizons (up to 15 cm).",
+    digits = 2
+  )
 ```
 
 ## Links
