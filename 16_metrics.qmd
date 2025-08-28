@@ -53,7 +53,7 @@ We have correlation among group of variables, notably among climate and soil, wh
 #| fig-cap: "All variables PCA per site and plot."
 data <- read_tsv("outputs/environment.tsv") %>%
   na.omit()
-pca <- prcomp(data %>% select(-site, -longitude, -latitude),
+pca <- prcomp(data %>% select(-site),
   scale. = TRUE
 )
 autoplot(pca,
@@ -72,7 +72,7 @@ autoplot(pca,
 #| warning: false
 #| fig-cap: "All variables pairwise correlations."
 read_tsv("outputs/environment.tsv") %>%
-  select(-site, -longitude, -latitude) %>%
+  select(-site) %>%
   cor(use = "pairwise.complete.obs") %>%
   corrplot::corrplot(type = "upper", diag = FALSE)
 ```
